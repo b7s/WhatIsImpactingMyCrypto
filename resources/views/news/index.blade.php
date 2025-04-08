@@ -14,11 +14,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bitcoin News - Latest Cryptocurrency Updates</title>
-    <meta name="description" content="Get the latest Bitcoin and cryptocurrency price movement news with sentiment analysis. Stay updated with market trends and forecasts.">
+    <title>What Is Impacting My Crypto? - Latest Cryptocurrency Updates</title>
+    <meta name="description" content="Get the latest Bitcoin, stablecoins, and cryptocurrency price movement news with sentiment analysis. Stay updated with market trends and forecasts.">
     <meta name="keywords" content="bitcoin, cryptocurrency, crypto news, bitcoin price, crypto market, blockchain news">
-    <meta property="og:title" content="Bitcoin News - Latest Cryptocurrency Updates">
-    <meta property="og:description" content="Get the latest Bitcoin and cryptocurrency price movement news with sentiment analysis.">
+    <meta property="og:title" content="What Is Impacting My Crypto? - Latest Cryptocurrency Updates">
+    <meta property="og:description" content="Get the latest Bitcoin, stablecoins, and cryptocurrency price movement news with sentiment analysis. Stay updated with market trends and forecasts.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta name="twitter:card" content="summary_large_image">
@@ -252,7 +252,7 @@
     <div class="container mx-auto px-4 py-8">
         <header class="mb-8">
             <div class="flex justify-between items-center mb-6">
-                <h1 class="text-3xl md:text-4xl font-bold">Bitcoin News</h1>
+                <h1 class="text-3xl md:text-4xl font-bold">What Is Impacting My Crypto?</h1>
                 <div class="flex items-center gap-2">
                     @if($currentSentiment !== 'all' || !empty($selectedTimestamp))
                     <a href="{{ route('news.index') }}" class="p-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center">
@@ -460,7 +460,7 @@
                                                     :class="{
                                                         'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200': item.sentiment === 'positive',
                                                         'bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-200': item.sentiment === 'negative',
-                                                        'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200': item.sentiment === 'neutral'
+                                                        'bg-sky-100 text-gray-800 dark:bg-sky-700 dark:text-gray-200': item.sentiment === 'neutral'
                                                     }"
                                                     x-text="item.sentiment.charAt(0).toUpperCase() + item.sentiment.slice(1)"></span>
                                                 <p class="text-sm font-medium text-gray-900 dark:text-gray-100 line-clamp-2" x-text="item.title"></p>
