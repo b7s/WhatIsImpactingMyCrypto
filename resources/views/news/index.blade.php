@@ -252,7 +252,10 @@
     <div class="container mx-auto px-4 py-8">
         <header class="mb-8">
             <div class="flex justify-between items-center mb-6">
-                <h1 class="text-3xl md:text-4xl font-bold">What Is Impacting My Crypto?</h1>
+                <div class="flex items-center">
+                    <img src="{{ asset('images/logo.svg') }}" alt="Crypto Impact Logo" class="w-12 h-12 mr-3">
+                    <h1 class="text-3xl md:text-4xl font-bold">Bitcoin News</h1>
+                </div>
                 <div class="flex items-center gap-2">
                     @if($currentSentiment !== 'all' || !empty($selectedTimestamp))
                     <a href="{{ route('news.index') }}" class="p-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center">
