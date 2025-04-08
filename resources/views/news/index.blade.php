@@ -537,6 +537,13 @@
                 {{ $news->appends(request()->query())->links() }}
             </div>
         @endif
+
+        <div class="mt-16">
+            <h2 class="text-2xl font-bold mb-4">What Is Impacting My Crypto?</h2>
+            <p class="text-gray-600 dark:text-gray-400 mb-4">
+                Cryptocurrency markets are highly reactive to news events. Regulatory announcements, institutional adoption, macroeconomic trends, and technological developments can all trigger significant price movements within minutes. Our sentiment analysis helps you identify the market's emotional response and potential impact direction.
+            </p>
+        </div>
     </div>
 
     <script>
@@ -747,4 +754,4 @@
         });
     </script>
 </body>
-</html> 
+</html>
