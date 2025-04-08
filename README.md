@@ -1,109 +1,121 @@
-# Bitcoin News Aggregator
+# What Is Impacting My Crypto?
 
-A modern cryptocurrency news aggregator that fetches, analyzes, and displays the latest Bitcoin and cryptocurrency news with sentiment analysis.
+A modern web application that tracks, analyzes, and displays cryptocurrency news with sentiment analysis and price correlations.
 
-## Features
+## Project Overview
 
-- **Real-time Cryptocurrency News**: Aggregates news from various sources with automatic updates
-- **Sentiment Analysis**: Categorizes news articles as positive, negative, or neutral
-- **Bitcoin Price Chart**: Interactive price chart showing BTC price movement over the last 24 hours
-- **Click Tracking**: Tracks user engagement with news articles
-- **Responsive Design**: Optimized for both desktop and mobile devices
-- **Dark/Light Mode**: User-selectable theme preference
-- **Political News Filter**: Special section for regulatory and political news affecting crypto markets
-- **News by Hour**: View news published during specific time periods by clicking on the price chart
-- **SEO Optimized**: Properly formatted meta tags for better search engine indexing
+This application fetches the latest cryptocurrency news, analyzes sentiment, and correlates with Bitcoin price movements. The platform helps users understand what factors may be impacting cryptocurrency markets.
 
-## Technologies Used
+### Key Features
 
-### Backend
-- **Laravel 10**: PHP framework for the application core
-- **MySQL**: Database for storing news articles and Bitcoin price data
-- **PHP 8.3**: For server-side processing
-- **Sentiment Analysis**: Natural language processing for news sentiment classification
-- **RSS Feed Processing**: For gathering news from various sources
+- **News Aggregation**: Automated collection of cryptocurrency news from multiple sources
+- **Sentiment Analysis**: Classification of news as positive, negative, or neutral
+- **Political Impact Identification**: Special highlighting of news related to policy, regulation, and government actions
+- **Bitcoin Price Tracking**: 24-hour price chart with interactive exploration
+- **Time Correlation**: View news published at specific times to correlate with price movements
+- **Dark/Light Mode**: UI theme persistence using localStorage
+- **Click Tracking**: Analytics on which news articles users find most relevant
+- **Mobile-Responsive Design**: Optimized user experience across all devices
 
-### Frontend
-- **Alpine.js**: Lightweight JavaScript framework for interactive elements
-- **Tailwind CSS**: Utility-first CSS framework for styling
-- **Chart.js**: For rendering the Bitcoin price chart
-- **Responsive Design**: Mobile-first approach with responsive components
+## Technical Stack
 
-### Features
-- **Encoded URLs**: Security through YouTube-style URL encoding for click tracking
-- **Real-time Notifications**: Updates when new articles are available
-- **HTML Sanitization**: Removing HTML tags from descriptions for consistent display
-- **Caching**: Performance optimization through intelligent caching
-- **Dark Mode Detection**: Automatic theme selection based on system preferences
-
-## Architecture
-
-- **MVC Pattern**: Clear separation of concerns with Models, Views, and Controllers
-- **Service Layer**: Dedicated services for fetching news and processing data
-- **Repository Pattern**: Clean data access layer
-- **Event-Driven Communication**: Custom events for communication between components
-- **RESTful API**: Endpoints for retrieving time-specific news
+- **Backend**: Laravel 12 (PHP 8.3)
+- **Frontend**: Alpine.js, Tailwind CSS, Chart.js
+- **Database**: MySQL/PostgreSQL
+- **Caching**: Laravel's built-in caching system for performance
+- **Deployment**: Compatible with any PHP hosting with Laravel support
 
 ## Getting Started
 
 ### Prerequisites
+
 - PHP 8.3+
 - Composer
-- MySQL 8.0+
-- Node.js and NPM (for frontend assets)
+- Node.js & NPM
+- Database (MySQL or PostgreSQL)
 
 ### Installation
 
-1. Clone the repository
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/b7s/WhatIsImpactingMyCrypto.git
+   cd WhatIsImpactingMyCrypto
+   ```
+
+2. Install dependencies:
+   ```bash
+   composer install
+   npm install
+   ```
+
+3. Set up environment variables:
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+
+4. Configure your database connection in the `.env` file
+
+5. Run migrations and seeders:
+   ```bash
+   php artisan migrate
+   php artisan db:seed
+   ```
+
+6. Fetch initial data:
+   ```bash
+   php artisan news:fetch
+   php artisan bitcoin:fetch
+   ```
+
+7. Start the development server:
+   ```bash
+   php artisan serve
+   ```
+
+## Usage
+
+### Scheduled Tasks
+
+Set up the following cron jobs for automatic updates:
+
 ```bash
-git clone https://github.com/yourusername/bitcoin-news-aggregator.git
-cd bitcoin-news-aggregator
+# Fetch new cryptocurrency news every hour
+* * * * * cd /path-to-your-project && php artisan news:fetch
+
+# Update Bitcoin price data every 15 minutes
+*/15 * * * * cd /path-to-your-project && php artisan bitcoin:fetch
 ```
 
-2. Install dependencies
-```bash
-composer install
-```
+### Manual Updates
 
-3. Set up environment file
-```bash
-cp .env.example .env
-php artisan key:generate
-```
+You can manually trigger updates with:
 
-4. Configure database in the .env file
-```bash
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=bitcoin_news
-DB_USERNAME=root
-DB_PASSWORD=
-```
-
-5. Run migrations
-```bash
-php artisan migrate
-```
-
-6. Fetch initial news data
 ```bash
 php artisan news:fetch
+php artisan bitcoin:fetch
 ```
 
-7. Start the server
-```bash
-php artisan serve
-```
+### Viewing News
 
-8. Visit http://localhost:8000 in your browser
+- Visit `/` to access the main news dashboard
+- Use sentiment filters to focus on positive, negative, or neutral news
+- Click on the Bitcoin price chart to see news from specific time periods
+- Toggle dark/light mode with the theme button in the top-right corner
 
-### Commands
+## Customization
 
-- `php artisan news:fetch` - Fetches latest news from sources
-- `php artisan news:list` - Lists all news articles with details
-- `php artisan serve` - Starts the development server
+- Add or modify political keywords in `app/Http/Controllers/NewsController.php`
+- Adjust sentiment analysis parameters in `app/Services/NewsService.php`
+- Modify the UI components in `resources/views/news/index.blade.php`
 
 ## License
 
 This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Acknowledgements
+
+- [Laravel](https://laravel.com/) - The PHP framework used
+- [Alpine.js](https://alpinejs.dev/) - JavaScript framework for interactivity
+- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
+- [Chart.js](https://www.chartjs.org/) - JavaScript charting library
