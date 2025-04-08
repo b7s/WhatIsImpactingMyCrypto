@@ -14,14 +14,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>What Is Impacting My Crypto? - Latest Cryptocurrency Updates</title>
-    <meta name="description" content="Get the latest Bitcoin, stablecoins, and cryptocurrency price movement news with sentiment analysis. Stay updated with market trends and forecasts.">
-    <meta name="keywords" content="bitcoin, cryptocurrency, crypto news, bitcoin price, crypto market, blockchain news">
-    <meta property="og:title" content="What Is Impacting My Crypto? - Latest Cryptocurrency Updates">
-    <meta property="og:description" content="Get the latest Bitcoin, stablecoins, and cryptocurrency price movement news with sentiment analysis. Stay updated with market trends and forecasts.">
+    <title>What Is Impacting My Crypto? - Latest Cryptocurrency News Analysis</title>
+    <meta name="description" content="Get the latest Bitcoin and cryptocurrency price movement news with sentiment analysis. Stay updated with market trends and forecasts.">
+    <meta name="keywords" content="bitcoin, cryptocurrency, crypto news, bitcoin price, crypto market, blockchain news, impact">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}">
+    
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="What Is Impacting My Crypto? - Latest Cryptocurrency News Analysis">
+    <meta property="og:description" content="Get the latest Bitcoin and cryptocurrency price movement news with sentiment analysis.">
+    <meta property="og:image" content="{{ asset('images/logo.png') }}">
+    
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ url()->current() }}">
+    <meta name="twitter:title" content="What Is Impacting My Crypto? - Latest Cryptocurrency News Analysis">
+    <meta name="twitter:description" content="Get the latest Bitcoin and cryptocurrency price movement news with sentiment analysis.">
+    <meta name="twitter:image" content="{{ asset('images/logo.png') }}">
+    
     <meta name="robots" content="index, follow">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -253,8 +267,8 @@
         <header class="mb-8">
             <div class="flex justify-between items-center mb-6">
                 <div class="flex items-center">
-                    <img src="{{ asset('images/logo.svg') }}" alt="Crypto Impact Logo" class="w-12 h-12 mr-3">
-                    <h1 class="text-3xl md:text-4xl font-bold">Bitcoin News</h1>
+                    <img src="{{ asset('images/logo.png') }}" alt="Crypto Impact Logo" class="w-12 h-12 mr-3">
+                    <h1 class="text-3xl md:text-4xl font-bold">What Is Impacting My Crypto?</h1>
                 </div>
                 <div class="flex items-center gap-2">
                     @if($currentSentiment !== 'all' || !empty($selectedTimestamp))
