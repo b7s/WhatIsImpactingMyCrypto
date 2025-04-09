@@ -31,8 +31,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // Fetch news and automatically clear cache every 30 minutes
-        $schedule->command('news:fetch')->everyThirtyMinutes();
+        // Fetch news and automatically clear cache every 5 minutes
+        $schedule->command('news:fetch')->everyFiveMinutes();
         
         // Fetch current Bitcoin price every 5 minutes
         $schedule->command('bitcoin:fetch')->everyFiveMinutes();
