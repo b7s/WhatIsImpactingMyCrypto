@@ -63,8 +63,6 @@ class NewsService
         
         if ($fetchedCount === 0) {
             Log::warning('No new articles were fetched.');
-        } else {
-            Log::info("Successfully fetched {$fetchedCount} new articles.");
         }
     }
 

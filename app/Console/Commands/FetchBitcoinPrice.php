@@ -39,18 +39,13 @@ class FetchBitcoinPrice extends Command
                 $this->error('Failed to fetch Bitcoin price from APIs.');
                 return self::FAILURE;
             }
-            
-            $this->info('Bitcoin price updated: $' . number_format($bitcoinPrice->price, 2));
-            
+                        
             // Clear Bitcoin cache to ensure the chart displays updated data
             $this->clearBitcoinCache();
-            $this->info('Bitcoin price cache cleared.');
             
             // Every 12 hours, clean old data to optimize the database
             if (now()->hour % 12 === 0 && now()->minute < 5) {
-                $this->info('Cleaning old Bitcoin price data...');
                 $bitcoinService->cleanOldData();
-                $this->info('Old Bitcoin price data cleaned.');
             }
             
             return self::SUCCESS;

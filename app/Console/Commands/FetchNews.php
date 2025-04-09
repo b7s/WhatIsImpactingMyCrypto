@@ -34,9 +34,7 @@ class FetchNews extends Command
             
             // Limpar o cache para que novos dados sejam carregados
             NewsController::clearCache();
-            $this->info('Cache cleared to reflect new data.');
-            
-            $this->info('News fetched successfully!');
+
             return self::SUCCESS;
         } catch (\Exception $e) {
             $this->error('Error fetching news: ' . $e->getMessage());
