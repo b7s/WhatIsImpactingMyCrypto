@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('news', function (Blueprint $table) {
-            $table->index('title', 'idx_title');
+            $table->unique('title', 'unique_news_title');
             $table->index('published_at', 'idx_published_at');
-            $table->unique(['title', 'url'], 'unique_news_title_url');
+            $table->index(['title', 'url'], 'unique_news_title_url');
         });
     }
 
@@ -24,9 +24,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('news', function (Blueprint $table) {
-            $table->dropUnique('unique_news_title_url');
+            $table->dropIndex('unique_news_title_url');
             $table->dropIndex('idx_published_at');
-            $table->dropIndex('idx_title');
+            $table->dropUnique('unique_news_title');
         });
     }
 };
