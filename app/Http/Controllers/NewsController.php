@@ -57,7 +57,7 @@ class NewsController extends Controller
                       ->where('published_at', '<=', $date->copy()->endOfHour());
             }
             
-            $news = $query->paginate(10)->withQueryString();
+            $news = $query->paginate(12)->withQueryString();
            
             // Identify political news (4 most recent)
             $politicalNews = $this->getPoliticalNews();
