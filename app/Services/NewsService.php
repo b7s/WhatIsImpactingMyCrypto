@@ -117,7 +117,7 @@ class NewsService
             // Create news entry
             News::create([
                 'title' => Str::upper($title),
-                'description' => Str::upper($description ?: Str::limit($title, 150)),
+                'description' => $description ?: Str::limit($title, 150),
                 'url' => $originalUrl,
                 'source' => $source,
                 'sentiment' => $sentiment,
