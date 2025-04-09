@@ -244,7 +244,6 @@ class NewsController extends Controller
             $total = array_sum($counts);
             if ($total === 0) {
                 return [
-                    'counts' => $counts,
                     'percentages' => ['positive' => 0, 'negative' => 0, 'neutral' => 0],
                     'dominant' => 'neutral',
                     'weighted' => true
@@ -262,10 +261,8 @@ class NewsController extends Controller
             $dominant = array_search($maxCount, $counts);
             
             return [
-                'counts' => $counts,
                 'percentages' => $percentages,
                 'dominant' => $dominant,
-                'total' => $total,
                 'weighted' => true
             ];
         });
