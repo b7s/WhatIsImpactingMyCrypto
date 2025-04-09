@@ -342,7 +342,29 @@
                 <!-- Today's Sentiment Indicator -->
                 <div class="bg-white dark:bg-gray-800 rounded-lg p-3 shadow-sm">
                     <div class="flex items-center justify-between text-sm font-medium mb-2">
-                        <span class="mr-2">Last 24h Market Sentiment:</span>
+                        <div class="flex items-center">
+                            <span class="mr-2">Last 24h Market Sentiment:</span>
+                            <div x-data="{ showInfo: false }" class="relative">
+                                <button @mouseenter="showInfo = true" @mouseleave="showInfo = false" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 focus:outline-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </button>
+                                <div x-show="showInfo" 
+                                     x-transition:enter="transition ease-out duration-200" 
+                                     x-transition:enter-start="opacity-0 translate-y-1" 
+                                     x-transition:enter-end="opacity-100 translate-y-0" 
+                                     x-transition:leave="transition ease-in duration-150" 
+                                     x-transition:leave-start="opacity-100 translate-y-0" 
+                                     x-transition:leave-end="opacity-0 translate-y-1" 
+                                     class="absolute left-0 mt-2 w-72 px-4 py-3 bg-white dark:bg-gray-700 rounded-lg shadow-lg z-50 text-xs text-left"
+                                     style="transform: translateX(-50%);">
+                                    <p class="font-medium mb-1 text-gray-900 dark:text-white">Weighted Sentiment Calculation</p>
+                                    <p class="text-gray-600 dark:text-gray-300 mb-1">This indicator shows the dominant market sentiment based on news from the last 24 hours.</p>
+                                    <p class="text-gray-600 dark:text-gray-300">Political news (containing terms like "regulation", "policy", "government", etc.) have twice the impact on positive and negative sentiment calculations.</p>
+                                </div>
+                            </div>
+                        </div>
                         <span class="px-2 py-0.5 rounded font-bold {{ 
                             $todaySentiment['dominant'] === 'positive' ? 'bg-green-500 text-white' : 
                             ($todaySentiment['dominant'] === 'negative' ? 'bg-rose-500 text-white' : 'bg-sky-500 text-white') 

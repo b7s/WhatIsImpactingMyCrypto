@@ -204,18 +204,50 @@ class NewsController extends Controller
         return Cache::remember(self::CACHE_PREFIX . 'last24h_sentiment', now()->addMinutes(self::CACHE_MINUTES), function () {
             $last24Hours = now()->subHours(24);
             
+            // Get news from the last 24 hours
+            $recentNews = News::where('published_at', '>=', $last24Hours)->get();
+            
+            // Initialize counters with weighted calculations
             $counts = [
-                'positive' => News::where('published_at', '>=', $last24Hours)->where('sentiment', 'positive')->count(),
-                'negative' => News::where('published_at', '>=', $last24Hours)->where('sentiment', 'negative')->count(),
-                'neutral' => News::where('published_at', '>=', $last24Hours)->where('sentiment', 'neutral')->count(),
+                'positive' => 0,
+                'negative' => 0,
+                'neutral' => 0,
             ];
+            
+            foreach ($recentNews as $news) {
+                // Check if this is a political news
+                $isPolitical = false;
+                foreach (self::POLITICAL_KEYWORDS as $keyword) {
+                    if (stripos($news->title, $keyword) !== false || stripos($news->description, $keyword) !== false) {
+                        $isPolitical = true;
+                        break;
+                    }
+                }
+                
+                // Apply weight based on news type
+                $weight = $isPolitical ? 2 : 1;
+                
+                // Apply weighted count
+                switch ($news->sentiment) {
+                    case 'positive':
+                        $counts['positive'] += $weight;
+                        break;
+                    case 'negative':
+                        $counts['negative'] += $weight;
+                        break;
+                    case 'neutral':
+                        $counts['neutral'] += 1; // Always weight of 1 for neutral
+                        break;
+                }
+            }
             
             $total = array_sum($counts);
             if ($total === 0) {
                 return [
                     'counts' => $counts,
                     'percentages' => ['positive' => 0, 'negative' => 0, 'neutral' => 0],
-                    'dominant' => 'neutral'
+                    'dominant' => 'neutral',
+                    'weighted' => true
                 ];
             }
             
@@ -233,7 +265,8 @@ class NewsController extends Controller
                 'counts' => $counts,
                 'percentages' => $percentages,
                 'dominant' => $dominant,
-                'total' => $total
+                'total' => $total,
+                'weighted' => true
             ];
         });
     }
