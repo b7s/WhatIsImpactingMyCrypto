@@ -223,7 +223,7 @@ class NewsService
             'rebound', 'boom', 'breakthrough', 'opportunity', 'optimistic',
             'potential', 'promising', 'support', 'uptrend', 'profitable',
             'success', 'momentum', 'expand', 'higher', 'upside',
-            'pause', 'pauses', 'cancel', 'tariff', 'tariffs',
+            'pause', 'pauses', 'cancel', 'derisk', 'de-risk'
         ];
         
         $negativeWords = [
