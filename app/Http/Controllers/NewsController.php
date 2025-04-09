@@ -22,7 +22,7 @@ class NewsController extends Controller
         'regulation', 'policy', 'government', 'trump', 'biden', 'senate', 'congress',
         'law', 'sec', 'cftc', 'federal', 'reserve', 'fed', 'tax', 'taxes', 'legislation',
         'president', 'minister', 'regulatory', 'compliance', 'legal', 'jpow', 'powell', 
-        'war', 'musk', 'china', 'usa'
+        'war', 'musk', 'china', 'usa', 'jinping', 'putin'
     ];
     
     /**
