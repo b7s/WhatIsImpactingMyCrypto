@@ -292,6 +292,17 @@
             popupNews = event.detail.news;
             loadingNews = false;
         });
+        
+        // Update TradingView theme based on dark mode
+        $watch('darkMode', value => {
+            if (document.querySelector('.tradingview-widget-container__widget iframe')) {
+                const iframe = document.querySelector('.tradingview-widget-container__widget iframe');
+                const theme = value ? 'dark' : 'light';
+                if (iframe && iframe.contentWindow) {
+                    iframe.contentWindow.postMessage({ name: 'set-theme', value: theme }, '*');
+                }
+            }
+        });
       ">
     <div class="container mx-auto px-4 py-8">
         <header class="mb-8">
@@ -326,16 +337,16 @@
                 <!-- Sentiment Filters -->
                 <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 mb-4 lg:mb-0">
                     <a href="{{ route('news.index') }}" class="px-4 py-2 rounded-full text-sm font-medium text-center {{ $currentSentiment === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600' }} transition-colors">
-                        All <span class="ml-1 px-2 py-0.5 rounded-full text-xs bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200">{{ $sentimentCounts['all'] }}</span>
+                        All
                     </a>
                     <a href="{{ route('news.index', ['sentiment' => 'positive']) }}" class="px-4 py-2 rounded-full text-sm font-medium text-center {{ $currentSentiment === 'positive' ? 'bg-green-600 text-white' : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100 hover:bg-green-200 dark:hover:bg-green-800' }} transition-colors">
-                        Positive <span class="ml-1 px-2 py-0.5 rounded-full text-xs bg-white dark:bg-gray-800 text-green-800 dark:text-green-200">{{ $sentimentCounts['positive'] }}</span>
+                        Positive
                     </a>
                     <a href="{{ route('news.index', ['sentiment' => 'negative']) }}" class="px-4 py-2 rounded-full text-sm font-medium text-center {{ $currentSentiment === 'negative' ? 'bg-rose-600 text-white' : 'bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-100 hover:bg-rose-200 dark:hover:bg-rose-800' }} transition-colors">
-                        Negative <span class="ml-1 px-2 py-0.5 rounded-full text-xs bg-white dark:bg-gray-800 text-rose-800 dark:text-rose-200">{{ $sentimentCounts['negative'] }}</span>
+                        Negative
                     </a>
                     <a href="{{ route('news.index', ['sentiment' => 'neutral']) }}" class="px-4 py-2 rounded-full text-sm font-medium text-center {{ $currentSentiment === 'neutral' ? 'bg-sky-600 text-white' : 'bg-sky-100 text-gray-800 dark:bg-sky-700 dark:text-gray-100 hover:bg-sky-300 dark:hover:bg-sky-600' }} transition-colors">
-                        Neutral <span class="ml-1 px-2 py-0.5 rounded-full text-xs bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200">{{ $sentimentCounts['neutral'] }}</span>
+                        Neutral
                     </a>
                 </div>
 
@@ -451,6 +462,15 @@
                         <div class="flex items-center">
                             <img src="{{ asset('images/bitcoin.svg') }}" alt="Bitcoin" class="w-5 h-5 mr-2">
                             <h2 class="text-lg sm:text-xl font-bold">Bitcoin Price</h2>
+                            <button 
+                                @click="$dispatch('open-tradingview')" 
+                                class="ml-2 text-xs px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors flex items-center"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3m0 0l3 3m-3-3v12m6-9l3 3m0 0l3-3m-3 3V6" />
+                                </svg>
+                                TradingView
+                            </button>
                             @if($latestBitcoinPrice)
                             <span class="ml-2 text-lg sm:text-xl font-bold {{ $latestBitcoinPrice->price_change_24h > 0 ? 'text-green-600 dark:text-green-400' : ($latestBitcoinPrice->price_change_24h < 0 ? 'text-rose-600 dark:text-rose-400' : 'text-gray-700 dark:text-gray-300') }}">
                                 ${{ number_format($latestBitcoinPrice->price, 2) }}
@@ -546,6 +566,64 @@
                                 </a>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- TradingView Modal -->
+        <div
+            x-data="{ showTradingView: false }"
+            x-show="showTradingView"
+            x-on:open-tradingview.window="showTradingView = true"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            class="fixed inset-0 z-50 overflow-y-auto"
+            x-cloak
+        >
+            <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+                <div class="fixed inset-0 transition-opacity" aria-hidden="true" @click="showTradingView = false">
+                    <div class="absolute inset-0 bg-gray-500 dark:bg-gray-900 opacity-75"></div>
+                </div>
+                
+                <div @click.away="showTradingView = false"
+                    class="inline-block w-full max-w-5xl h-[80vh] align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle"
+                >
+                    <div class="absolute top-0 right-0 pt-4 pr-4 z-10">
+                        <button @click="showTradingView = false" class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 focus:outline-none bg-white dark:bg-gray-800 rounded-full p-1">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <div class="h-full w-full p-1">
+                        <!-- TradingView Widget BEGIN -->
+                        <div class="tradingview-widget-container" style="height:100%;width:100%">
+                          <div class="tradingview-widget-container__widget" style="height:calc(100% - 32px);width:100%"></div>
+                          <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
+                          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+                          {
+                          "autosize": true,
+                          "symbol": "COINBASE:BTCUSD",
+                          "interval": "60",
+                          "timezone": "Etc/UTC",
+                          "theme": "dark",
+                          "style": "1",
+                          "locale": "en",
+                          "allow_symbol_change": true,
+                          "studies": [
+                            "STD;RSI"
+                          ],
+                          "support_host": "https://www.tradingview.com"
+                        }
+                          </script>
+                        </div>
+                        <!-- TradingView Widget END -->
                     </div>
                 </div>
             </div>
