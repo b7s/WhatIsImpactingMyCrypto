@@ -21,7 +21,7 @@ This application fetches the latest cryptocurrency news, analyzes sentiment, and
 
 - **Backend**: Laravel 12 (PHP 8.3)
 - **Frontend**: Alpine.js, Tailwind CSS, Chart.js
-- **Database**: MySQL/PostgreSQL
+- **Database**: SQLite
 - **Caching**: Laravel's built-in caching system for performance
 - **Deployment**: Compatible with any PHP hosting with Laravel support
 
