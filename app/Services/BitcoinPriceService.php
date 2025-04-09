@@ -164,19 +164,17 @@ class BitcoinPriceService
         // Keep only data from the last 7 days
         BitcoinPrice::where('recorded_at', '<', now()->subDays(7))
             ->delete();
-            
+  
         // Reduce data granularity for 2-7 days ago
         // (keep only 1 record per hour)
         $startDate = now()->subDays(7);
         $endDate = now()->subDays(2);
-        
+
         $hourlyRecords = BitcoinPrice::whereBetween('recorded_at', [$startDate, $endDate])
             ->orderBy('recorded_at')
             ->get()
-            ->groupBy(function ($item) {
-                return $item->recorded_at->format('Y-m-d H:00:00');
-            });
-            
+            ->groupBy(static fn ($item) => $item->recorded_at->format('Y-m-d H:00:00'));
+
         foreach ($hourlyRecords as $hour => $records) {
             if ($records->count() > 1) {
                 // Keep only the middle record of the hour

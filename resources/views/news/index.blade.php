@@ -287,12 +287,12 @@
             loadingNews = true;
             showNewsPopup = true;
         });
-        
+
         window.addEventListener('news-loaded', (event) => {
             popupNews = event.detail.news;
             loadingNews = false;
         });
-        
+
         // Update TradingView theme based on dark mode
         $watch('darkMode', value => {
             if (document.querySelector('.tradingview-widget-container__widget iframe')) {
@@ -556,7 +556,7 @@
                                                     x-text="item.sentiment.charAt(0).toUpperCase() + item.sentiment.slice(1)"></span>
                                                 <p class="text-sm font-medium text-gray-900 dark:text-gray-100 line-clamp-2" x-text="item.title"></p>
                                             </div>
-                                            <div class="mt-1 text-xs text-gray-500 dark:text-gray-400" x-text="formatPublishedAt(item.published_at)"></div>
+                                            <div class="mt-1 text-xs text-gray-500 dark:text-gray-400" x-text="item.published_at"></div>
                                         </a>
                                     </li>
                                 </template>
@@ -757,26 +757,55 @@
             // Chart configuration
             const ctx = bitcoinChartElement.getContext('2d');
             
-            // Create gradient for the fill
-            const gradient = ctx.createLinearGradient(0, 0, 0, 250);
-            gradient.addColorStop(0, 'rgba(14, 165, 233, 0.2)');
-            gradient.addColorStop(1, 'rgba(14, 165, 233, 0)');
-            
             // Create chart
             const bitcoinChart = new Chart(ctx, {
-                type: 'line',
+                type: 'bar',
                 data: {
                     labels: labels,
                     datasets: [{
                         label: 'Bitcoin Price (USD)',
                         data: prices,
-                        borderColor: gradientColors.lineColor,
-                        backgroundColor: gradient,
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.3,
-                        pointRadius: 0,
-                        pointHoverRadius: 0
+                        backgroundColor: function(context) {
+                            const index = context.dataIndex;
+                            const bar = context.chart.getDatasetMeta(0).data[index];
+                            
+                            // Create gradient for each bar
+                            const gradient = ctx.createLinearGradient(0, 0, 0, 250);
+                            
+                            if (index === 0) {
+                                // First bar - blue gradient
+                                gradient.addColorStop(0, 'rgba(14, 165, 233, 0.8)');
+                                gradient.addColorStop(1, 'rgba(14, 165, 233, 0.2)');
+                            } else {
+                                const currentPrice = prices[index];
+                                const previousPrice = prices[index - 1];
+                                
+                                if (currentPrice >= previousPrice) {
+                                    // Positive change - green gradient
+                                    gradient.addColorStop(0, 'rgba(16, 185, 129, 0.8)');
+                                    gradient.addColorStop(1, 'rgba(16, 185, 129, 0.2)');
+                                } else {
+                                    // Negative change - red gradient
+                                    gradient.addColorStop(0, 'rgba(239, 68, 68, 0.8)');
+                                    gradient.addColorStop(1, 'rgba(239, 68, 68, 0.2)');
+                                }
+                            }
+                            
+                            return gradient;
+                        },
+                        borderColor: function(context) {
+                            const index = context.dataIndex;
+                            if (index === 0) return 'rgba(14, 165, 233, 1)';
+                            const currentPrice = prices[index];
+                            const previousPrice = prices[index - 1];
+                            return currentPrice >= previousPrice 
+                                ? 'rgba(16, 185, 129, 1)'
+                                : 'rgba(239, 68, 68, 1)';
+                        },
+                        borderWidth: 1,
+                        borderRadius: 2,
+                        barPercentage: 0.6,
+                        categoryPercentage: 0.8
                     }]
                 },
                 options: {
@@ -802,12 +831,24 @@
                                 }
                             },
                             ticks: {
+                                beginAtZero: true,
                                 callback: function(value) {
                                     return '$' + value.toLocaleString();
                                 },
                                 color: function(context) {
                                     return document.documentElement.classList.contains('dark') ? '#646970' : '#6b7280';
-                                }
+                                },
+                                min: function() {
+                                    const minPrice = Math.min(...prices);
+                                    return minPrice - 10000;
+                                },
+                                max: function() {
+                                    const maxPrice = Math.max(...prices);
+                                    // Calculate 10% above the maximum price, but ensure it's at least 10,000 above
+                                    const buffer = Math.max(maxPrice * 0.2, 20000);
+                                    return maxPrice + buffer;
+                                },
+                                stepSize: 20000
                             }
                         }
                     },
@@ -837,6 +878,16 @@
                     const price = prices[index];
                     const hour = labels[index];
                     
+                    // Calculate percentage change
+                    let percentageChange = '';
+                    if (index > 0) {
+                        const previousPrice = prices[index - 1];
+                        const change = ((price - previousPrice) / previousPrice) * 100;
+                        percentageChange = change >= 0 
+                            ? `<span class="text-green-500">+${change.toFixed(2)}%</span>`
+                            : `<span class="text-red-500">${change.toFixed(2)}%</span>`;
+                    }
+                    
                     // Tooltip position
                     const rect = bitcoinChartElement.getBoundingClientRect();
                     const xPos = points[0].element.x;
@@ -851,6 +902,7 @@
                     tooltip.innerHTML = `
                         <p>${hour} <span class="text-xs">${timezone}</span></p>
                         <p class="price">$${price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                        ${percentageChange ? `<p class="text-xs">Change: ${percentageChange}</p>` : ''}
                         <p class="text-xs">Click to see news</p>
                     `;
                     
