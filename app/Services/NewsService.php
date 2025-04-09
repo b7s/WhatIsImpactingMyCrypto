@@ -71,7 +71,7 @@ class NewsService
     {
         try {
             // Extract the title, removing source if it's in the format "Title - Source"
-            $title = (string) $item->title;
+            $title = trim((string) $item->title);
             $googleUrl = (string) $item->link;
             
             // Extract source from title if available (format: "Title - Source")
@@ -107,7 +107,7 @@ class NewsService
             }
             
             // Check if news already exists with this title or URL
-            if (News::where('url', $originalUrl)->orWhere('title', $title)->exists()) {
+            if (News::select('id')->where(static fn ($query) => $query->where('title', $title)->orWhere('url', $originalUrl))->exists()) {
                 return false;
             }
 
@@ -116,7 +116,7 @@ class NewsService
 
             // Create news entry
             News::create([
-                'title' => $title,
+                'title' => Str::upper($title),
                 'description' => $description ?: Str::limit($title, 150),
                 'url' => $originalUrl,
                 'source' => $source,
