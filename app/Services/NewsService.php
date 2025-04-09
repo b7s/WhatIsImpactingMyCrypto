@@ -222,7 +222,8 @@ class NewsService
             'rally', 'soar', 'growth', 'climbing', 'outperform', 'recovery',
             'rebound', 'boom', 'breakthrough', 'opportunity', 'optimistic',
             'potential', 'promising', 'support', 'uptrend', 'profitable',
-            'success', 'momentum', 'expand', 'higher', 'upside'
+            'success', 'momentum', 'expand', 'higher', 'upside',
+            'pause tariff', 'pauses tariffs', 'cancel tariff', 'tariff pause',
         ];
         
         $negativeWords = [
