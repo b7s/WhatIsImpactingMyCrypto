@@ -20,7 +20,8 @@ class NewsService
         'https://news.google.com/rss/search?q=bitcoin+price+movement&hl=en-US&gl=US&ceid=US:en',
         'https://news.google.com/rss/search?q=cryptocurrency+stablecoins+market&hl=en-US&gl=US&ceid=US:en',
         'https://news.google.com/rss/search?q=bitcoin+analysis&hl=en-US&gl=US&ceid=US:en',
-        'https://news.google.com/rss/search?q=global+trade+regulation+policy+government&hl=en-US&gl=US&ceid=US:en'
+        'https://news.google.com/rss/search?q=global+trade+regulation+policy+government&hl=en-US&gl=US&ceid=US:en',
+        'https://news.google.com/rss/search?q=global+economy+tax&hl=en-US&gl=US&ceid=US:en'
     ];
 
     public function __construct()
