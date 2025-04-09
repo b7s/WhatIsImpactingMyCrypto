@@ -84,7 +84,7 @@ class NewsService
                 $source = (string) $item->source ?: 'Unknown Source';
             }
             
-            $description = strip_tags((string) $item->description);
+            $description = trim(strip_tags((string) $item->description));
             $publishedAt = Carbon::parse((string) $item->pubDate);
             
             // Extract actual source URL from Google News URL
@@ -117,7 +117,7 @@ class NewsService
             // Create news entry
             News::create([
                 'title' => Str::upper($title),
-                'description' => $description ?: Str::limit($title, 150),
+                'description' => Str::upper($description ?: Str::limit($title, 150)),
                 'url' => $originalUrl,
                 'source' => $source,
                 'sentiment' => $sentiment,
