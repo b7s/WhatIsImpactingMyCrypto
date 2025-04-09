@@ -41,7 +41,7 @@ class NewsController extends Controller
         $timestamp = $request->timestamp ?? '';
         $cacheKey = self::CACHE_PREFIX . 'index_' . $sentiment . '_' . ($timestamp ?: 'latest');
         
-        [$news, $sentimentCounts, $politicalNews, $bitcoinData, $latestPrice, $todaySentiment] = Cache::remember($cacheKey, now()->addMinutes(self::CACHE_MINUTES), function () use ($request, $sentiment, $timestamp) {
+        [$news, $politicalNews, $bitcoinData, $latestPrice, $todaySentiment] = Cache::remember($cacheKey, now()->addMinutes(self::CACHE_MINUTES), function () use ($request, $sentiment, $timestamp) {
             $query = News::orderBy('published_at', 'desc');
             
             // Filter by sentiment if requested
@@ -57,17 +57,7 @@ class NewsController extends Controller
             }
             
             $news = $query->paginate(12);
-            
-            // Get counts for filter badges
-            $sentimentCounts = Cache::remember(self::CACHE_PREFIX . 'sentiment_counts', now()->addMinutes(self::CACHE_MINUTES), function () {
-                return [
-                    'positive' => News::where('sentiment', 'positive')->count(),
-                    'negative' => News::where('sentiment', 'negative')->count(),
-                    'neutral' => News::where('sentiment', 'neutral')->count(),
-                    'all' => News::count(),
-                ];
-            });
-            
+           
             // Identify political news (4 most recent)
             $politicalNews = $this->getPoliticalNews();
             
@@ -84,12 +74,11 @@ class NewsController extends Controller
             // Get today's sentiment breakdown
             $todaySentiment = $this->getTodaySentiment();
 
-            return [$news, $sentimentCounts, $politicalNews, $bitcoinData, $latestPrice, $todaySentiment];
+            return [$news, $politicalNews, $bitcoinData, $latestPrice, $todaySentiment];
         });
 
         return view('news.index', [
             'news' => $news,
-            'sentimentCounts' => $sentimentCounts,
             'currentSentiment' => $sentiment,
             'politicalNews' => $politicalNews,
             'bitcoinPrices' => $bitcoinData,

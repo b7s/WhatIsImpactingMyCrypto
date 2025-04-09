@@ -462,29 +462,31 @@
                         <div class="flex items-center">
                             <img src="{{ asset('images/bitcoin.svg') }}" alt="Bitcoin" class="w-5 h-5 mr-2">
                             <h2 class="text-lg sm:text-xl font-bold">Bitcoin Price</h2>
-                            <button 
-                                @click="$dispatch('open-tradingview')" 
-                                class="ml-2 text-xs px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors flex items-center"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3m0 0l3 3m-3-3v12m6-9l3 3m0 0l3-3m-3 3V6" />
-                                </svg>
-                                TradingView
-                            </button>
                             @if($latestBitcoinPrice)
                             <span class="ml-2 text-lg sm:text-xl font-bold {{ $latestBitcoinPrice->price_change_24h > 0 ? 'text-green-600 dark:text-green-400' : ($latestBitcoinPrice->price_change_24h < 0 ? 'text-rose-600 dark:text-rose-400' : 'text-gray-700 dark:text-gray-300') }}">
                                 ${{ number_format($latestBitcoinPrice->price, 2) }}
                             </span>
-                            @if($latestBitcoinPrice->price_change_24h)
-                            <span class="ml-1 text-xs sm:text-sm font-medium {{ $latestBitcoinPrice->price_change_24h > 0 ? 'text-green-600 dark:text-green-400' : 'text-rose-600 dark:text-rose-400' }}">
-                                {{ $latestBitcoinPrice->price_change_24h > 0 ? '+' : '' }}{{ number_format($latestBitcoinPrice->price_change_24h, 2) }}%
-                            </span>
-                            @endif
+                                @if($latestBitcoinPrice->price_change_24h)
+                                <span class="ml-1 text-xs sm:text-sm font-medium {{ $latestBitcoinPrice->price_change_24h > 0 ? 'text-green-600 dark:text-green-400' : 'text-rose-600 dark:text-rose-400' }}">
+                                    {{ $latestBitcoinPrice->price_change_24h > 0 ? '+' : '' }}{{ number_format($latestBitcoinPrice->price_change_24h, 2) }}%
+                                </span>
+                                @endif
                             @endif
                         </div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400 mt-1 sm:mt-0">
+                            <span class="font-medium">* Click chart</span> to see news at that time
+                        </div>
                     </div>
-                    <div class="text-xs text-gray-500 dark:text-gray-400 mt-1 sm:mt-0">
-                        <p><span class="font-medium">Click chart</span> to see news at that time</p>
+                    <div class="mt-1 sm:mt-0">
+                        <button 
+                                @click="$dispatch('open-tradingview')" 
+                                class="ml-2 text-xs px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors flex items-center"
+                            >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3m0 0l3 3m-3-3v12m6-9l3 3m0 0l3-3m-3 3V6" />
+                            </svg>
+                            TradingView
+                        </button>
                     </div>
                 </div>
                 
