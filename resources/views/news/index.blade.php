@@ -30,7 +30,7 @@
     <meta property="og:image" content="{{ asset('images/logo.png') }}">
     
     <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:card" content="summary">
     <meta name="twitter:url" content="{{ url()->current() }}">
     <meta name="twitter:title" content="What Is Impacting My Crypto? - Latest Cryptocurrency News Analysis">
     <meta name="twitter:description" content="Get the latest Bitcoin and cryptocurrency price movement news with sentiment analysis.">
@@ -318,20 +318,27 @@ crossorigin="anonymous"></script>
                 </div>
                 <div class="flex items-center gap-2">
                     @if($sentiment !== 'all' || !empty($selectedTimestamp))
-                    <a href="{{ route('news.index') }}" class="p-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <a href="{{ route('news.index') }}" class="p-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center" aria-label="Return to home page">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                         </svg>
                         Home
                     </a>
                     @endif
-                    <button @click="darkMode = !darkMode" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-                        <svg x-show="!darkMode" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <button 
+                        @click="darkMode = !darkMode" 
+                        class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                        aria-label="Toggle dark mode"
+                        aria-pressed="darkMode"
+                        type="button"
+                    >
+                        <svg x-show="!darkMode" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                         </svg>
-                        <svg x-show="darkMode" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg x-show="darkMode" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                         </svg>
+                        <span class="sr-only" x-text="darkMode ? 'Switch to light mode' : 'Switch to dark mode'"></span>
                     </button>
                 </div>
             </div>
@@ -340,28 +347,34 @@ crossorigin="anonymous"></script>
             <!-- Sentiment Filters & Today's Sentiment -->
             <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center mb-6 gap-4">
                 <!-- Sentiment Filters -->
-                <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 mb-4 lg:mb-0">
-                    <a href="{{ route('news.index') }}" class="px-4 py-2 rounded-full text-sm font-medium text-center {{ $sentiment === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600' }} transition-colors">
+                <nav aria-label="Sentiment filters" class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 mb-4 lg:mb-0">
+                    <a href="{{ route('news.index') }}" class="px-4 py-2 rounded-full text-sm font-medium text-center {{ $sentiment === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600' }} transition-colors" aria-current="{{ $sentiment === 'all' ? 'page' : 'false' }}">
                         All
                     </a>
-                    <a href="{{ route('news.index', ['sentiment' => 'positive']) }}" class="px-4 py-2 rounded-full text-sm font-medium text-center {{ $sentiment === 'positive' ? 'bg-green-600 text-white' : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100 hover:bg-green-200 dark:hover:bg-green-800' }} transition-colors">
+                    <a href="{{ route('news.index', ['sentiment' => 'positive']) }}" class="px-4 py-2 rounded-full text-sm font-medium text-center {{ $sentiment === 'positive' ? 'bg-green-600 text-white' : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100 hover:bg-green-200 dark:hover:bg-green-800' }} transition-colors" aria-current="{{ $sentiment === 'positive' ? 'page' : 'false' }}">
                         Positive
                     </a>
-                    <a href="{{ route('news.index', ['sentiment' => 'negative']) }}" class="px-4 py-2 rounded-full text-sm font-medium text-center {{ $sentiment === 'negative' ? 'bg-rose-600 text-white' : 'bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-100 hover:bg-rose-200 dark:hover:bg-rose-800' }} transition-colors">
+                    <a href="{{ route('news.index', ['sentiment' => 'negative']) }}" class="px-4 py-2 rounded-full text-sm font-medium text-center {{ $sentiment === 'negative' ? 'bg-rose-600 text-white' : 'bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-100 hover:bg-rose-200 dark:hover:bg-rose-800' }} transition-colors" aria-current="{{ $sentiment === 'negative' ? 'page' : 'false' }}">
                         Negative
                     </a>
-                    <a href="{{ route('news.index', ['sentiment' => 'neutral']) }}" class="px-4 py-2 rounded-full text-sm font-medium text-center {{ $sentiment === 'neutral' ? 'bg-sky-600 text-white' : 'bg-sky-100 text-gray-800 dark:bg-sky-700 dark:text-gray-100 hover:bg-sky-300 dark:hover:bg-sky-600' }} transition-colors">
+                    <a href="{{ route('news.index', ['sentiment' => 'neutral']) }}" class="px-4 py-2 rounded-full text-sm font-medium text-center {{ $sentiment === 'neutral' ? 'bg-sky-600 text-white' : 'bg-sky-100 text-gray-800 dark:bg-sky-700 dark:text-gray-100 hover:bg-sky-300 dark:hover:bg-sky-600' }} transition-colors" aria-current="{{ $sentiment === 'neutral' ? 'page' : 'false' }}">
                         Neutral
                     </a>
-                </div>
+                </nav>
 
                 <!-- Today's Sentiment Indicator -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg p-3 shadow-sm">
+                <div class="bg-white dark:bg-gray-800 rounded-lg p-3 shadow-sm" aria-labelledby="sentiment-heading">
                     <div class="flex items-center justify-between text-sm font-medium mb-2">
                         <div class="flex items-center">
                             <div x-data="{ showInfo: false }" class="relative">
-                                <button @mouseenter="showInfo = true" @mouseleave="showInfo = false" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 focus:outline-none">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <button 
+                                    @mouseenter="showInfo = true" 
+                                    @mouseleave="showInfo = false" 
+                                    class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 focus:outline-none"
+                                    aria-label="Sentiment calculation information"
+                                    type="button"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
                                 </button>
@@ -373,13 +386,15 @@ crossorigin="anonymous"></script>
                                      x-transition:leave-start="opacity-100 translate-y-0" 
                                      x-transition:leave-end="opacity-0 translate-y-1" 
                                      class="absolute left-0 mt-2 w-72 px-4 py-3 bg-white dark:bg-gray-700 rounded-lg shadow-lg z-50 text-xs text-left"
-                                     style="transform: translateX(-50%);">
+                                     style="transform: translateX(-50%);"
+                                     role="tooltip"
+                                >
                                     <p class="font-medium mb-1 text-gray-900 dark:text-white">Weighted Sentiment Calculation</p>
                                     <p class="text-gray-600 dark:text-gray-300 mb-1">This indicator shows the dominant market sentiment based on news from the last 24 hours.</p>
                                     <p class="text-gray-600 dark:text-gray-300">Political news (containing terms like "regulation", "policy", "government", etc.) have twice the impact on positive and negative sentiment calculations.</p>
                                 </div>
                             </div>
-                            <span class="ml-1 mr-2">Last 24h Market Sentiment:</span>
+                            <span id="sentiment-heading" class="ml-1 mr-2">Last 24h Market Sentiment:</span>
                         </div>
                         <span class="px-2 py-0.5 rounded font-bold {{ 
                             $todaySentiment['dominant'] === 'positive' ? 'bg-green-500 text-white' : 
@@ -388,11 +403,11 @@ crossorigin="anonymous"></script>
                             {{ ucfirst($todaySentiment['dominant']) }}
                         </span>
                     </div>
-                    <div class="w-full h-4 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                    <div class="w-full h-4 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden" role="presentation">
                         <div class="flex h-full">
-                            <div class="bg-green-500 h-full" style="width: {{ $todaySentiment['percentages']['positive'] }}%"></div>
-                            <div class="bg-sky-500 h-full" style="width: {{ $todaySentiment['percentages']['neutral'] }}%"></div>
-                            <div class="bg-rose-500 h-full" style="width: {{ $todaySentiment['percentages']['negative'] }}%"></div>
+                            <div class="bg-green-500 h-full" style="width: {{ $todaySentiment['percentages']['positive'] }}%" aria-hidden="true"></div>
+                            <div class="bg-sky-500 h-full" style="width: {{ $todaySentiment['percentages']['neutral'] }}%" aria-hidden="true"></div>
+                            <div class="bg-rose-500 h-full" style="width: {{ $todaySentiment['percentages']['negative'] }}%" aria-hidden="true"></div>
                         </div>
                     </div>
                     <div class="flex justify-between w-full text-xs mt-1">
@@ -406,10 +421,10 @@ crossorigin="anonymous"></script>
 
         <!-- Political section -->
         @if($politicalNews->isNotEmpty())
-        <section class="mb-8">
+        <section class="mb-8" aria-labelledby="political-news-heading">
             <div class="bg-purple-50 dark:bg-purple-900/30 p-4 sm:p-6 rounded-xl border border-purple-200 dark:border-purple-800">
-                <h2 class="text-xl sm:text-2xl font-bold mb-2 sm:mb-4 text-purple-800 dark:text-purple-300 flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <h2 id="political-news-heading" class="text-xl sm:text-2xl font-bold mb-2 sm:mb-4 text-purple-800 dark:text-purple-300 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                     </svg>
                     Impacting Crypto
@@ -443,9 +458,9 @@ crossorigin="anonymous"></script>
                                     <span class="font-medium text-gray-500 dark:text-gray-400">
                                         {{ str_replace(['.com', '.org', '.net'], '', $item->source) }}
                                     </span>
-                                    <a href="{{ $item->getRedirectRoute() }}" target="_blank" rel="noopener" class="flex items-center text-purple-600 dark:text-purple-400 hover:underline">
+                                    <a href="{{ $item->getRedirectRoute() }}" target="_blank" rel="noopener" class="flex items-center text-purple-600 dark:text-purple-400 hover:underline" aria-label="Read more about {{ $item->title }}">
                                         <span>Read more</span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                                         </svg>
                                     </a>
@@ -460,19 +475,19 @@ crossorigin="anonymous"></script>
 
         <!-- Bitcoin Price Chart Section -->
         @if(isset($bitcoinPrices) && count($bitcoinPrices) > 0)
-        <section class="mb-6 bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+        <section class="mb-6 bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden" aria-labelledby="bitcoin-price-heading">
             <div class="p-3 sm:p-4">
                 <div class="flex flex-wrap justify-between items-center mb-2">
                     <div>
                         <div class="flex items-center">
-                            <img src="{{ asset('images/bitcoin.svg') }}" alt="Bitcoin" class="w-5 h-5 mr-2">
-                            <h2 class="text-lg sm:text-xl font-bold">Bitcoin Price</h2>
+                            <img src="{{ asset('images/bitcoin.svg') }}" alt="Bitcoin logo" class="w-5 h-5 mr-2">
+                            <h2 id="bitcoin-price-heading" class="text-lg sm:text-xl font-bold">Bitcoin Price</h2>
                             @if($latestBitcoinPrice)
                             <span class="ml-2 text-lg sm:text-xl font-bold {{ $latestBitcoinPrice->price_change_24h > 0 ? 'text-green-600 dark:text-green-400' : ($latestBitcoinPrice->price_change_24h < 0 ? 'text-rose-600 dark:text-rose-400' : 'text-gray-700 dark:text-gray-300') }}">
                                 ${{ number_format($latestBitcoinPrice->price, 2) }}
                             </span>
                                 @if($latestBitcoinPrice->price_change_24h)
-                                <span class="ml-1 text-xs sm:text-sm font-medium {{ $latestBitcoinPrice->price_change_24h > 0 ? 'text-green-600 dark:text-green-400' : 'text-rose-600 dark:text-rose-400' }}">
+                                <span class="ml-1 text-xs sm:text-sm font-medium {{ $latestBitcoinPrice->price_change_24h > 0 ? 'text-green-600 dark:text-green-400' : 'text-rose-600 dark:text-rose-400' }}" aria-label="Price change in the last 24 hours: {{ $latestBitcoinPrice->price_change_24h > 0 ? 'up' : 'down' }} {{ number_format(abs($latestBitcoinPrice->price_change_24h), 2) }}%">
                                     {{ $latestBitcoinPrice->price_change_24h > 0 ? '+' : '' }}{{ number_format($latestBitcoinPrice->price_change_24h, 2) }}%
                                 </span>
                                 @endif
@@ -486,8 +501,10 @@ crossorigin="anonymous"></script>
                         <button 
                                 @click="$dispatch('open-tradingview')" 
                                 class="ml-2 text-xs px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors flex items-center"
+                                aria-label="Open TradingView chart"
+                                type="button"
                             >
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3m0 0l3 3m-3-3v12m6-9l3 3m0 0l3-3m-3 3V6" />
                             </svg>
                             TradingView
@@ -495,10 +512,11 @@ crossorigin="anonymous"></script>
                     </div>
                 </div>
                 
-                <div class="relative" style="height: 180px; sm:height: 200px; cursor: pointer;" title="Click to see news at this time">
+                <div class="relative" style="height: 180px; sm:height: 200px; cursor: pointer;" title="Click to see news at this time" 
+                    aria-label="Bitcoin price chart for the last 24 hours. Interactive chart that shows price changes. Click on bars to see news from that time period.">
                     <canvas id="bitcoinChart"></canvas>
-                    <div id="chartTooltip" class="bitcoin-chart-tooltip"></div>
-                    <div id="chartHoverPoint" class="bitcoin-chart-hover-point"></div>
+                    <div id="chartTooltip" class="bitcoin-chart-tooltip" aria-hidden="true"></div>
+                    <div id="chartHoverPoint" class="bitcoin-chart-hover-point" aria-hidden="true"></div>
                 </div>
             </div>
         </section>
@@ -513,7 +531,11 @@ crossorigin="anonymous"></script>
              x-transition:leave-start="opacity-100" 
              x-transition:leave-end="opacity-0" 
              class="fixed inset-0 z-50 overflow-y-auto" 
-             x-cloak>
+             x-cloak
+             role="dialog"
+             aria-labelledby="news-popup-title"
+             aria-modal="true"
+             >
             <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
                 <div class="fixed inset-0 transition-opacity" aria-hidden="true" @click="showNewsPopup = false">
                     <div class="absolute inset-0 bg-gray-500 dark:bg-gray-900 opacity-75"></div>
@@ -523,26 +545,31 @@ crossorigin="anonymous"></script>
                      class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                     <div class="px-4 py-5 sm:p-6">
                         <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">
+                            <h3 id="news-popup-title" class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">
                                 News from <span x-text="popupHour"></span> on <span x-text="popupDate"></span>
                             </h3>
-                            <button @click="showNewsPopup = false" class="text-gray-400 hover:text-gray-500 focus:outline-none">
-                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <button 
+                                @click="showNewsPopup = false" 
+                                class="text-gray-400 hover:text-gray-500 focus:outline-none" 
+                                aria-label="Close dialog"
+                                type="button">
+                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                             </button>
                         </div>
                         
-                        <div class="mt-2" x-show="loadingNews">
+                        <div class="mt-2" x-show="loadingNews" aria-live="polite">
                             <div class="flex justify-center">
-                                <svg class="animate-spin h-8 w-8 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <svg class="animate-spin h-8 w-8 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
+                                <span class="sr-only">Loading news...</span>
                             </div>
                         </div>
                         
-                        <div class="mt-2" x-show="!loadingNews">
+                        <div class="mt-2" x-show="!loadingNews" aria-live="polite">
                             <div x-show="popupNews.length === 0" class="text-center py-4 text-gray-500 dark:text-gray-400">
                                 No news published in this hour
                             </div>
@@ -591,6 +618,9 @@ crossorigin="anonymous"></script>
             x-transition:leave-end="opacity-0"
             class="fixed inset-0 z-50 overflow-y-auto"
             x-cloak
+            role="dialog"
+            aria-labelledby="tradingview-title"
+            aria-modal="true"
         >
             <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
                 <div class="fixed inset-0 transition-opacity" aria-hidden="true" @click="showTradingView = false">
@@ -601,14 +631,20 @@ crossorigin="anonymous"></script>
                     class="inline-block w-full max-w-5xl h-[80vh] align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle"
                 >
                     <div class="absolute top-0 right-0 pt-4 pr-4 z-10">
-                        <button @click="showTradingView = false" class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 focus:outline-none bg-white dark:bg-gray-800 rounded-full p-1">
-                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <button 
+                            @click="showTradingView = false" 
+                            class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 focus:outline-none bg-white dark:bg-gray-800 rounded-full p-1"
+                            aria-label="Close TradingView chart"
+                            type="button"
+                        >
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
                     </div>
                     
                     <div class="h-full w-full p-1">
+                        <h2 id="tradingview-title" class="sr-only">TradingView Bitcoin Chart</h2>
                         <!-- TradingView Widget BEGIN -->
                         <div class="tradingview-widget-container" style="height:100%;width:100%">
                           <div class="tradingview-widget-container__widget" style="height:calc(100% - 32px);width:100%"></div>
@@ -637,86 +673,92 @@ crossorigin="anonymous"></script>
         </div>
 
         @if($news->isEmpty())
-            <div class="p-8 bg-white dark:bg-gray-800 rounded-lg shadow-md text-center">
+            <div class="p-8 bg-white dark:bg-gray-800 rounded-lg shadow-md text-center" role="status">
                 <p class="text-xl">No news found with the selected filter.</p>
                 <a href="{{ route('news.index') }}" class="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">View all news</a>
             </div>
         @else
-            <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                @foreach($news as $article)
-                @php
-                    $articleSource = preg_replace('/\.(com|org|net|xyz|io|ai)$/i', '', $article->source);
-                    // Clean description: strip HTML tags and remove source name
-                    $cleanDesc = str_replace($article->source, '', strip_tags($article->description)); 
-                @endphp
-                    <div class="p-4 border dark:border-gray-700 rounded-lg bg-white hover:bg-gray-50 dark:bg-gray-900 dark:hover:bg-gray-800 transition-all">
-                        <div class="flex flex-col h-full">
-                            <div class="flex justify-between items-start mb-3">
-                                <span class="text-xs text-gray-500 dark:text-gray-400">{{ $article->published_at->diffForHumans() }}</span>
-                                <span class="px-2 py-0.5 rounded text-xs font-semibold
-                                    @if($article->sentiment === 'positive') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
-                                    @elseif($article->sentiment === 'negative') bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-200
-                                    @else bg-sky-100 text-gray-800 dark:bg-sky-900 dark:text-gray-200 @endif">
-                                    {{ ucfirst($article->sentiment) }}
-                                </span>
-                            </div>
-                            
-                            <h3 class="text-lg font-bold mb-2 line-clamp-2 text-gray-900 dark:text-white">
-                                {{ $article->title }}
-                            </h3>
-                            
-                            <p class="text-gray-600 dark:text-gray-400 line-clamp-3 mb-4">{!! $cleanDesc !!}</p>
-                            
-                            <div class="mt-auto flex justify-between items-center">
-                                <div class="flex items-center gap-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
-                                    </svg>
-                                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ $articleSource }}</span>
+            <section aria-label="Latest cryptocurrency news">
+                <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    @foreach($news as $article)
+                    @php
+                        $articleSource = preg_replace('/\.(com|org|net|xyz|io|ai)$/i', '', $article->source);
+                        // Clean description: strip HTML tags and remove source name
+                        $cleanDesc = str_replace($article->source, '', strip_tags($article->description)); 
+                    @endphp
+                        <article class="p-4 border dark:border-gray-700 rounded-lg bg-white hover:bg-gray-50 dark:bg-gray-900 dark:hover:bg-gray-800 transition-all">
+                            <div class="flex flex-col h-full">
+                                <div class="flex justify-between items-start mb-3">
+                                    <time datetime="{{ $article->published_at->toIso8601String() }}" class="text-xs text-gray-500 dark:text-gray-400">
+                                        {{ $article->published_at->diffForHumans() }}
+                                    </time>
+                                    <span class="px-2 py-0.5 rounded text-xs font-semibold
+                                        @if($article->sentiment === 'positive') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                                        @elseif($article->sentiment === 'negative') bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-200
+                                        @else bg-sky-100 text-gray-800 dark:bg-sky-900 dark:text-gray-200 @endif">
+                                        {{ ucfirst($article->sentiment) }}
+                                    </span>
+                                </div>
+                                
+                                <h3 class="text-lg font-bold mb-2 line-clamp-2 text-gray-900 dark:text-white">
+                                    {{ $article->title }}
+                                </h3>
+                                
+                                <p class="text-gray-600 dark:text-gray-400 line-clamp-3 mb-4">{!! $cleanDesc !!}</p>
+                                
+                                <div class="mt-auto flex justify-between items-center">
+                                    <div class="flex items-center gap-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+                                        </svg>
+                                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ $articleSource }}</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-3 flex gap-2 w-full">
+                                    <button
+                                        @click="
+                                            navigator.clipboard.writeText('{{ $article->getRedirectRoute() }}');
+                                            const originalText = $event.target.closest('button').innerText;
+                                            $event.target.closest('button').innerHTML = '<svg xmlns=\'http://www.w3.org/2000/svg\' class=\'h-4 w-4 mr-1\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'currentColor\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M5 13l4 4L19 7\' /></svg>Copied!';
+                                            setTimeout(() => {
+                                                $event.target.closest('button').innerHTML = '<svg xmlns=\'http://www.w3.org/2000/svg\' class=\'h-4 w-4 mr-1\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'currentColor\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3\' /></svg>Copy Link';
+                                            }, 1500);
+                                        "
+                                        class="flex-1 text-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors text-sm font-medium flex items-center justify-center"
+                                        type="button"
+                                        aria-label="Copy link to {{ $article->title }}"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                                        </svg>
+                                        Copy Link
+                                    </button>
+                                    
+                                    <a href="{{ $article->getRedirectRoute() }}" target="_blank" rel="noopener" class="flex-1 text-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors text-sm font-medium flex items-center justify-center" aria-label="Read article: {{ $article->title }}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-1" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                                        </svg>
+                                        Read Article
+                                    </a>
                                 </div>
                             </div>
-                            
-                            <div class="mt-3 flex gap-2 w-full">
-                                <button
-                                    @click="
-                                        navigator.clipboard.writeText('{{ $article->getRedirectRoute() }}');
-                                        const originalText = $event.target.closest('button').innerText;
-                                        $event.target.closest('button').innerHTML = '<svg xmlns=\'http://www.w3.org/2000/svg\' class=\'h-4 w-4 mr-1\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'currentColor\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M5 13l4 4L19 7\' /></svg>Copied!';
-                                        setTimeout(() => {
-                                            $event.target.closest('button').innerHTML = '<svg xmlns=\'http://www.w3.org/2000/svg\' class=\'h-4 w-4 mr-1\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'currentColor\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3\' /></svg>Copy Link';
-                                        }, 1500);
-                                    "
-                                    class="flex-1 text-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors text-sm font-medium flex items-center justify-center"
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                                    </svg>
-                                    Copy Link
-                                </button>
-                                
-                                <a href="{{ $article->getRedirectRoute() }}" target="_blank" rel="noopener" class="flex-1 text-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors text-sm font-medium flex items-center justify-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-1">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-                                    </svg>
-                                    Read Article
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
+                        </article>
+                    @endforeach
+                </div>
 
-            <div class="mt-8">
-                {{ $news->appends(request()->query())->links() }}
-            </div>
+                <nav aria-label="Pagination" class="mt-8">
+                    {{ $news->appends(request()->query())->links() }}
+                </nav>
+            </section>
         @endif
 
-        <div class="mt-16">
+        <footer class="mt-16" role="contentinfo">
             <h2 class="text-2xl font-bold mb-4">What Is Impacting My Crypto?</h2>
             <p class="text-gray-600 dark:text-gray-400 mb-4">
                 Cryptocurrency markets are highly reactive to news events. Regulatory announcements, institutional adoption, macroeconomic trends, and technological developments can all trigger significant price movements within minutes. Our sentiment analysis helps you identify the market's emotional response and potential impact direction.
             </p>
-        </div>
+        </footer>
     </div>
 
     <script>
