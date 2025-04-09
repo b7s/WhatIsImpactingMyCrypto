@@ -246,7 +246,37 @@
         popupHour: '',
         popupDate: '',
         popupNews: [],
-        loadingNews: false
+        loadingNews: false,
+        
+        // Helper function to format dates in local timezone
+        formatLocalTime(timestamp) {
+            if (!timestamp) return '';
+            const date = new Date(timestamp * 1000);
+            return date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: false});
+        },
+        
+        formatLocalDate(timestamp) {
+            if (!timestamp) return '';
+            const date = new Date(timestamp * 1000);
+            return date.toLocaleDateString(undefined, {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        },
+        
+        formatPublishedAt(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toLocaleString(undefined, {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            });
+        }
       }"
       x-init="
         window.addEventListener('open-news-popup', (event) => {
@@ -482,7 +512,7 @@
                                                     x-text="item.sentiment.charAt(0).toUpperCase() + item.sentiment.slice(1)"></span>
                                                 <p class="text-sm font-medium text-gray-900 dark:text-gray-100 line-clamp-2" x-text="item.title"></p>
                                             </div>
-                                            <div class="mt-1 text-xs text-gray-500 dark:text-gray-400" x-text="item.published_at"></div>
+                                            <div class="mt-1 text-xs text-gray-500 dark:text-gray-400" x-text="formatPublishedAt(item.published_at)"></div>
                                         </a>
                                     </li>
                                 </template>
@@ -575,10 +605,26 @@
             // Filter null values
             const filteredData = bitcoinData.filter(item => item.price !== null);
             
+            // Prepare data for the chart - convert UTC timestamps to local timezone
+            const convertedData = filteredData.map(item => {
+                // Convert timestamp to local timezone
+                const localDate = new Date(item.timestamp * 1000);
+                const localHour = localDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: false});
+                
+                return {
+                    ...item,
+                    hour: localHour, // Replace UTC hour with local hour
+                    localDate: localDate
+                };
+            });
+            
+            // Sort data by timestamp to ensure chronological order
+            convertedData.sort((a, b) => a.timestamp - b.timestamp);
+            
             // Prepare data for the chart
-            const labels = filteredData.map(item => item.hour);
-            const prices = filteredData.map(item => item.price);
-            const timestamps = filteredData.map(item => item.timestamp);
+            const labels = convertedData.map(item => item.hour);
+            const prices = convertedData.map(item => item.price);
+            const timestamps = convertedData.map(item => item.timestamp);
             
             // Calculate colors based on price trend
             const gradientColors = calculateGradientColors(prices);
@@ -675,11 +721,14 @@
                     const xPos = points[0].element.x;
                     const yPos = points[0].element.y;
                     
+                    // Get timezone info
+                    const timezone = getTimezoneAbbr();
+                    
                     tooltip.style.opacity = 1;
                     tooltip.style.left = xPos + 'px';
                     tooltip.style.top = (yPos - 80) + 'px';
                     tooltip.innerHTML = `
-                        <p>${hour}</p>
+                        <p>${hour} <span class="text-xs">${timezone}</span></p>
                         <p class="price">$${price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
                         <p class="text-xs">Click to see news</p>
                     `;
@@ -708,13 +757,21 @@
                     const index = points[0].index;
                     const timestamp = timestamps[index];
                     const hour = labels[index];
-                    const date = new Date(timestamp * 1000).toLocaleDateString();
+                    // Format date in local timezone
+                    const date = new Date(timestamp * 1000).toLocaleDateString(undefined, {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    });
+                    
+                    // Add timezone info to the hour
+                    const formattedHour = `${hour} ${getTimezoneAbbr()}`;
                     
                     // Safer way to update Alpine.js data
                     window.dispatchEvent(new CustomEvent('open-news-popup', { 
                         detail: {
                             timestamp: timestamp,
-                            hour: hour,
+                            hour: formattedHour,
                             date: date
                         }
                     }));
@@ -722,6 +779,11 @@
                     // Fetch news for this time
                     fetchNewsForHour(timestamp);
                 }
+            }
+            
+            // Get timezone abbreviation
+            function getTimezoneAbbr() {
+                return new Date().toLocaleTimeString('en-us', {timeZoneName: 'short'}).split(' ')[2];
             }
             
             // Fetch news for a specific hour
