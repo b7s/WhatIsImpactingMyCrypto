@@ -195,19 +195,19 @@ class NewsController extends Controller
     }
     
     /**
-     * Get the dominant sentiment for today's news
+     * Get the dominant sentiment for the last 24 hours
      * 
      * @return array
      */
     private function getTodaySentiment()
     {
-        return Cache::remember(self::CACHE_PREFIX . 'today_sentiment', now()->addMinutes(self::CACHE_MINUTES), function () {
-            $today = now()->startOfDay();
+        return Cache::remember(self::CACHE_PREFIX . 'last24h_sentiment', now()->addMinutes(self::CACHE_MINUTES), function () {
+            $last24Hours = now()->subHours(24);
             
             $counts = [
-                'positive' => News::where('published_at', '>=', $today)->where('sentiment', 'positive')->count(),
-                'negative' => News::where('published_at', '>=', $today)->where('sentiment', 'negative')->count(),
-                'neutral' => News::where('published_at', '>=', $today)->where('sentiment', 'neutral')->count(),
+                'positive' => News::where('published_at', '>=', $last24Hours)->where('sentiment', 'positive')->count(),
+                'negative' => News::where('published_at', '>=', $last24Hours)->where('sentiment', 'negative')->count(),
+                'neutral' => News::where('published_at', '>=', $last24Hours)->where('sentiment', 'neutral')->count(),
             ];
             
             $total = array_sum($counts);

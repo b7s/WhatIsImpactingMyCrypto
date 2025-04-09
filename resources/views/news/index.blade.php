@@ -342,7 +342,7 @@
                 <!-- Today's Sentiment Indicator -->
                 <div class="bg-white dark:bg-gray-800 rounded-lg p-3 shadow-sm">
                     <div class="flex items-center justify-between text-sm font-medium mb-2">
-                        <span class="mr-2">Today's Market Sentiment:</span>
+                        <span class="mr-2">Last 24h Market Sentiment:</span>
                         <span class="px-2 py-0.5 rounded font-bold {{ 
                             $todaySentiment['dominant'] === 'positive' ? 'bg-green-500 text-white' : 
                             ($todaySentiment['dominant'] === 'negative' ? 'bg-rose-500 text-white' : 'bg-sky-500 text-white') 
