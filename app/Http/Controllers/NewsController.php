@@ -39,7 +39,8 @@ class NewsController extends Controller
     {
         $sentiment = $request->sentiment ?? 'all';
         $timestamp = $request->timestamp ?? '';
-        $cacheKey = self::CACHE_PREFIX . 'index_' . $sentiment . '_' . ($timestamp ?: 'latest');
+        $page = $request->get('page', 1);
+        $cacheKey = self::CACHE_PREFIX . 'index_' . $sentiment . '_' . ($timestamp ?: 'latest') . '_page_' . $page;
         
         [$news, $politicalNews, $bitcoinData, $latestPrice, $todaySentiment] = Cache::remember($cacheKey, now()->addMinutes(self::CACHE_MINUTES), function () use ($request, $sentiment, $timestamp) {
             $query = News::orderBy('published_at', 'desc');
@@ -56,7 +57,7 @@ class NewsController extends Controller
                       ->where('published_at', '<=', $date->copy()->endOfHour());
             }
             
-            $news = $query->paginate(12);
+            $news = $query->paginate(10)->withQueryString();
            
             // Identify political news (4 most recent)
             $politicalNews = $this->getPoliticalNews();
@@ -79,7 +80,7 @@ class NewsController extends Controller
 
         return view('news.index', [
             'news' => $news,
-            'currentSentiment' => $sentiment,
+            'sentiment' => $sentiment,
             'politicalNews' => $politicalNews,
             'bitcoinPrices' => $bitcoinData,
             'latestBitcoinPrice' => $latestPrice,
@@ -175,11 +176,19 @@ class NewsController extends Controller
         // Clear individual cache keys we use
         Cache::forget(self::CACHE_PREFIX . 'sentiment_counts');
         Cache::forget(self::CACHE_PREFIX . 'political_news');
+        Cache::forget(self::CACHE_PREFIX . 'last24h_sentiment');
         
-        // Clear sentiment-specific caches
+        // Clear sentiment-specific and page-specific caches
         foreach (['all', 'positive', 'negative', 'neutral'] as $sentiment) {
+            // Clear non-paginated keys (old format)
             Cache::forget(self::CACHE_PREFIX . 'index_' . $sentiment);
             Cache::forget(self::CACHE_PREFIX . 'index_' . $sentiment . '_latest');
+            
+            // Clear paginated keys (new format)
+            for ($page = 1; $page <= 10; $page++) {
+                Cache::forget(self::CACHE_PREFIX . 'index_' . $sentiment . '_latest_page_' . $page);
+                Cache::forget(self::CACHE_PREFIX . 'index_' . $sentiment . '_page_' . $page);
+            }
         }
     }
     

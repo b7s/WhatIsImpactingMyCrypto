@@ -312,7 +312,7 @@
                     <h1 class="text-3xl md:text-4xl font-bold">What Is Impacting My Crypto?</h1>
                 </div>
                 <div class="flex items-center gap-2">
-                    @if($currentSentiment !== 'all' || !empty($selectedTimestamp))
+                    @if($sentiment !== 'all' || !empty($selectedTimestamp))
                     <a href="{{ route('news.index') }}" class="p-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -336,16 +336,16 @@
             <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center mb-6 gap-4">
                 <!-- Sentiment Filters -->
                 <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 mb-4 lg:mb-0">
-                    <a href="{{ route('news.index') }}" class="px-4 py-2 rounded-full text-sm font-medium text-center {{ $currentSentiment === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600' }} transition-colors">
+                    <a href="{{ route('news.index') }}" class="px-4 py-2 rounded-full text-sm font-medium text-center {{ $sentiment === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600' }} transition-colors">
                         All
                     </a>
-                    <a href="{{ route('news.index', ['sentiment' => 'positive']) }}" class="px-4 py-2 rounded-full text-sm font-medium text-center {{ $currentSentiment === 'positive' ? 'bg-green-600 text-white' : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100 hover:bg-green-200 dark:hover:bg-green-800' }} transition-colors">
+                    <a href="{{ route('news.index', ['sentiment' => 'positive']) }}" class="px-4 py-2 rounded-full text-sm font-medium text-center {{ $sentiment === 'positive' ? 'bg-green-600 text-white' : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100 hover:bg-green-200 dark:hover:bg-green-800' }} transition-colors">
                         Positive
                     </a>
-                    <a href="{{ route('news.index', ['sentiment' => 'negative']) }}" class="px-4 py-2 rounded-full text-sm font-medium text-center {{ $currentSentiment === 'negative' ? 'bg-rose-600 text-white' : 'bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-100 hover:bg-rose-200 dark:hover:bg-rose-800' }} transition-colors">
+                    <a href="{{ route('news.index', ['sentiment' => 'negative']) }}" class="px-4 py-2 rounded-full text-sm font-medium text-center {{ $sentiment === 'negative' ? 'bg-rose-600 text-white' : 'bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-100 hover:bg-rose-200 dark:hover:bg-rose-800' }} transition-colors">
                         Negative
                     </a>
-                    <a href="{{ route('news.index', ['sentiment' => 'neutral']) }}" class="px-4 py-2 rounded-full text-sm font-medium text-center {{ $currentSentiment === 'neutral' ? 'bg-sky-600 text-white' : 'bg-sky-100 text-gray-800 dark:bg-sky-700 dark:text-gray-100 hover:bg-sky-300 dark:hover:bg-sky-600' }} transition-colors">
+                    <a href="{{ route('news.index', ['sentiment' => 'neutral']) }}" class="px-4 py-2 rounded-full text-sm font-medium text-center {{ $sentiment === 'neutral' ? 'bg-sky-600 text-white' : 'bg-sky-100 text-gray-800 dark:bg-sky-700 dark:text-gray-100 hover:bg-sky-300 dark:hover:bg-sky-600' }} transition-colors">
                         Neutral
                     </a>
                 </div>
