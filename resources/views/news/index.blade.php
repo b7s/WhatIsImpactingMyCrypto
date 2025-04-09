@@ -40,6 +40,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -48,6 +49,10 @@
             }
         }
     </script>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4979108873270184"
+crossorigin="anonymous"></script>
+
     <style>
         [x-cloak] { display: none !important; }
         
