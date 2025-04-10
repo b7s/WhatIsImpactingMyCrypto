@@ -311,7 +311,7 @@ crossorigin="anonymous"></script>
       ">
     <div class="container mx-auto px-4 py-8">
         <div class="mb-8">
-            <gecko-coin-price-marquee-widget locale="en" dark-mode="true" transparent-background="true" coin-ids="bitcoin,ethereum,tether,solana,pi-network,jupiter-exchange-solana,sonic-3,ripple,chainlink,cardano,binancecoin,the-open-network,dogecoin,tron,polkadot,polygon-ecosystem-token" initial-currency="usd"></gecko-coin-price-marquee-widget>
+            <gecko-coin-price-marquee-widget locale="en" dark-mode="true" transparent-background="true" coin-ids="bitcoin,ethereum,tether,solana,pi-network,jupiter-exchange-solana,sonic-3,ripple,chainlink,cardano,binancecoin,the-open-network,dogecoin,tron,polkadot,polygon-ecosystem-token,pancakeswap-token" initial-currency="usd"></gecko-coin-price-marquee-widget>
             <script src="https://widgets.coingecko.com/gecko-coin-price-marquee-widget.js"></script>
         </div>
 
