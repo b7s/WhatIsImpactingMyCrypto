@@ -401,7 +401,7 @@ crossorigin="anonymous"></script>
                             </div>
                             <span id="sentiment-heading" class="ml-1 mr-2">Last 24h Market Sentiment:</span>
                         </div>
-                        <span class="px-2 py-0.5 rounded font-bold {{ 
+                        <span class="px-2 py-0.5 rounded-full font-bold {{ 
                             $todaySentiment['dominant'] === 'positive' ? 'bg-green-500 text-white' : 
                             ($todaySentiment['dominant'] === 'negative' ? 'bg-rose-500 text-white' : 'bg-sky-500 text-white') 
                         }}">
