@@ -71,7 +71,7 @@ class NewsService
     {
         try {
             // Extract the title, removing source if it's in the format "Title - Source"
-            $title = trim((string) $item->title);
+            $title = Str::upper(trim((string) $item->title));
             $googleUrl = (string) $item->link;
             
             // Extract source from title if available (format: "Title - Source")
@@ -115,14 +115,17 @@ class NewsService
             $sentiment = $this->analyzeSentiment($title . ' ' . $description);
 
             // Create news entry
-            News::create([
-                'title' => Str::upper($title),
-                'description' => $description ?: Str::limit($title, 150),
-                'url' => $originalUrl,
-                'source' => $source,
-                'sentiment' => $sentiment,
-                'published_at' => $publishedAt,
-            ]);
+            News::firstOrCreate(
+                ['title' => $title],
+                [
+                    'title' => $title,
+                    'description' => $description ?: Str::limit($title, 150),
+                    'url' => $originalUrl,
+                    'source' => $source,
+                    'sentiment' => $sentiment,
+                    'published_at' => $publishedAt,
+                ]
+            );
             
             return true;
         } catch (\Exception $e) {
