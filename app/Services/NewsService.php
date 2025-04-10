@@ -107,7 +107,7 @@ class NewsService
             }
             
             // Check if news already exists with this title or URL
-            if (News::select('id')->where(static fn ($query) => $query->where('title', $title)->orWhere('url', $originalUrl))->exists()) {
+            if (News::select('id')->where(static fn ($query) => $query->where('title', $title)->orWhere('url', $originalUrl))->first()?->id) {
                 return false;
             }
 
