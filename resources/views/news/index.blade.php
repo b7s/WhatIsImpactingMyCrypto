@@ -713,7 +713,7 @@
                         </button>
                     </div>
                     
-                    <div class="h-full w-full p-1">
+                    <div class="h-full w-full p-1" x-if="showHeatmap">
                         <h2 id="heatmap-title" class="sr-only">Cryptocurrency Heatmap</h2>
                         <gecko-coin-heatmap-widget locale="en" dark-mode="true" transparent-background="true" outlined="true" top="100"></gecko-coin-heatmap-widget>
                     </div>
