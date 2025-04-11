@@ -698,7 +698,7 @@
                 </div>
                 
                 <div @click.away="showHeatmap = false"
-                    class="inline-block w-[800px] h-[800px] align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle"
+                    class="inline-block w-[900px] h-[850px] align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle"
                 >
                     <div class="absolute top-0 right-0 pt-4 pr-4 z-10">
                         <button 
@@ -716,7 +716,7 @@
                     <div class="h-full w-full p-1">
                         <h2 id="heatmap-title" class="sr-only">Cryptocurrency Heatmap</h2>
                         <template x-if="showHeatmap">
-                            <gecko-coin-heatmap-widget locale="en" dark-mode="true" transparent-background="true" outlined="false" top="100" width="800" height="800"></gecko-coin-heatmap-widget>
+                            <gecko-coin-heatmap-widget locale="en" dark-mode="true" transparent-background="true" outlined="false" top="100" width="895" height="800"></gecko-coin-heatmap-widget>
                         </template>
                     </div>
                 </div>
