@@ -51,9 +51,9 @@
     </script>
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4979108873270184"
-crossorigin="anonymous"></script>
-                                            <script src="https://widgets.coingecko.com/gecko-coin-heatmap-widget.js"></script>
-
+    crossorigin="anonymous"></script>
+    <script src="https://widgets.coingecko.com/gecko-coin-heatmap-widget.js"></script>
+    <script src="https://widgets.coingecko.com/gecko-coin-price-marquee-widget.js"></script>
 
     <style>
         [x-cloak] { display: none !important; }
@@ -315,7 +315,6 @@ crossorigin="anonymous"></script>
     <div class="container mx-auto px-4 py-8">
         <div class="mb-8">
             <gecko-coin-price-marquee-widget locale="en" dark-mode="true" transparent-background="true" coin-ids="bitcoin,ethereum,solana,pi-network,jupiter-exchange-solana,sonic-3,ripple,chainlink,cardano,binancecoin,the-open-network,dogecoin,tron,polkadot,polygon-ecosystem-token,pancakeswap-token" initial-currency="usd"></gecko-coin-price-marquee-widget>
-            <script src="https://widgets.coingecko.com/gecko-coin-price-marquee-widget.js"></script>
         </div>
 
         <header class="mb-8">
@@ -334,67 +333,16 @@ crossorigin="anonymous"></script>
                     </a>
                     @endif
                     
-                <button 
-                    @click="showHeatmap = true" 
-                    class="p-2 rounded-lg bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors flex items-center"
-                    aria-label="Open cryptocurrency heatmap"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                    </svg>
-                    Heatmap
-                </button>
-
-                <!-- Heatmap Modal -->
-                <div x-show="showHeatmap" 
-                     x-transition:enter="transition ease-out duration-300"
-                     x-transition:enter-start="opacity-0"
-                     x-transition:enter-end="opacity-100"
-                     x-transition:leave="transition ease-in duration-200"
-                     x-transition:leave-start="opacity-100"
-                     x-transition:leave-end="opacity-0"
-                     class="fixed inset-0 z-50 overflow-y-auto"
-                     aria-labelledby="heatmap-modal-title"
-                     role="dialog"
-                     aria-modal="true"
-                >
-                    <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-                        <div x-show="showHeatmap" 
-                             x-transition:enter="transition ease-out duration-300"
-                             x-transition:enter-start="opacity-0"
-                             x-transition:enter-end="opacity-100"
-                             x-transition:leave="transition ease-in duration-200"
-                             x-transition:leave-start="opacity-100"
-                             x-transition:leave-end="opacity-0"
-                             class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-                             aria-hidden="true"
-                             @click="showHeatmap = false"
-                        ></div>
-
-                        <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
-                            <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                                <div class="sm:flex sm:items-start">
-                                    <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
-                                        <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4" id="heatmap-modal-title">
-                                            Cryptocurrency Heatmap
-                                        </h3>
-                                        <div class="mt-2">
-                                            <gecko-coin-heatmap-widget locale="en" dark-mode="true" transparent-background="true" outlined="true" top="100"></gecko-coin-heatmap-widget>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                                <button type="button" 
-                                        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-800 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                                        @click="showHeatmap = false"
-                                >
-                                    Close
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <button 
+                        @click="showHeatmap = true" 
+                        class="p-2 rounded-lg bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors flex items-center"
+                        aria-label="Open cryptocurrency heatmap"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                        Heatmap
+                    </button>
                 </div>
             </div>
             
@@ -730,7 +678,6 @@ crossorigin="anonymous"></script>
 
         <!-- Heatmap Modal -->
         <div
-            x-data="{ showHeatmap: false }"
             x-show="showHeatmap"
             x-on:open-heatmap.window="showHeatmap = true"
             x-transition:enter="transition ease-out duration-200"
@@ -751,7 +698,7 @@ crossorigin="anonymous"></script>
                 </div>
                 
                 <div @click.away="showHeatmap = false"
-                    class="inline-block w-full max-w-5xl h-[80vh] align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle"
+                    class="inline-block w-[90vw] h-[90vh] align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle"
                 >
                     <div class="absolute top-0 right-0 pt-4 pr-4 z-10">
                         <button 
@@ -768,7 +715,6 @@ crossorigin="anonymous"></script>
                     
                     <div class="h-full w-full p-1">
                         <h2 id="heatmap-title" class="sr-only">Cryptocurrency Heatmap</h2>
-                        <script src="https://widgets.coingecko.com/gecko-coin-heatmap-widget.js"></script>
                         <gecko-coin-heatmap-widget locale="en" dark-mode="true" transparent-background="true" outlined="true" top="100"></gecko-coin-heatmap-widget>
                     </div>
                 </div>
