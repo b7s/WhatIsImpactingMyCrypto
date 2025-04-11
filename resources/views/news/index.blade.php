@@ -716,7 +716,7 @@
                     <div class="h-full w-full p-1">
                         <h2 id="heatmap-title" class="sr-only">Cryptocurrency Heatmap</h2>
                         <template x-if="showHeatmap">
-                            <gecko-coin-heatmap-widget locale="en" dark-mode="true" transparent-background="true" outlined="false" top="100" width="900" height="800"></gecko-coin-heatmap-widget>
+                            <gecko-coin-heatmap-widget locale="en" dark-mode="true" transparent-background="true" outlined="false" top="100" width="900"  height="800"></gecko-coin-heatmap-widget>
                         </template>
                     </div>
                 </div>
