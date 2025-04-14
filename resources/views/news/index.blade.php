@@ -426,7 +426,7 @@
         <!-- Political section -->
         @if($politicalNews->isNotEmpty())
         <section class="mb-8" aria-labelledby="political-news-heading">
-            <div class="bg-purple-50 dark:bg-purple-900/30 p-4 sm:p-6 rounded-xl border border-purple-200 dark:border-purple-800">
+            <div class="bg-purple-50 dark:bg-purple-900/20 p-4 sm:p-6 rounded-xl border border-purple-200 dark:border-purple-900/50">
                 <h2 id="political-news-heading" class="text-xl sm:text-2xl font-bold mb-2 sm:mb-4 text-purple-800 dark:text-purple-300 flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -737,16 +737,27 @@
                         // Clean description: strip HTML tags and remove source name
                         $cleanDesc = str_replace($article->source, '', strip_tags($article->description)); 
                     @endphp
-                        <article class="p-4 border dark:border-gray-700 rounded-lg bg-white hover:bg-gray-50 dark:bg-gray-900 dark:hover:bg-gray-800 transition-all">
-                            <div class="flex flex-col h-full">
+                        <article class="p-4 border dark:border-gray-700 rounded-lg bg-white hover:bg-gray-50 dark:bg-gray-900 dark:hover:bg-gray-800 transition-all relative overflow-hidden
+                            @if($article->sentiment === 'positive') 
+                                before:absolute before:inset-0 before:bg-gradient-to-br before:from-green-500/20 before:to-transparent before:opacity-70 dark:before:from-green-400/30 dark:before:to-transparent dark:before:opacity-80
+                            @elseif($article->sentiment === 'negative') 
+                                before:absolute before:inset-0 before:bg-gradient-to-br before:from-rose-500/20 before:to-transparent before:opacity-70 dark:before:from-rose-400/30 dark:before:to-transparent dark:before:opacity-80
+                            @else 
+                                before:absolute before:inset-0 before:bg-gradient-to-br before:from-sky-500/20 before:to-transparent before:opacity-70 dark:before:from-sky-400/30 dark:before:to-transparent dark:before:opacity-80
+                            @endif">
+                            <div class="flex flex-col h-full relative z-10">
                                 <div class="flex justify-between items-start mb-3">
                                     <time datetime="{{ $article->published_at->toIso8601String() }}" class="text-xs text-gray-500 dark:text-gray-400">
                                         {{ $article->published_at->diffForHumans() }}
                                     </time>
-                                    <span class="px-2 py-0.5 rounded text-xs font-semibold
-                                        @if($article->sentiment === 'positive') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
-                                        @elseif($article->sentiment === 'negative') bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-200
-                                        @else bg-sky-100 text-gray-800 dark:bg-sky-900 dark:text-gray-200 @endif">
+                                    <span class="px-2 py-0.5 rounded-full text-xs font-semibold backdrop-blur-sm
+                                        @if($article->sentiment === 'positive') 
+                                            bg-green-500/30 text-green-700 dark:bg-green-400/40 dark:text-green-200
+                                        @elseif($article->sentiment === 'negative') 
+                                            bg-rose-500/30 text-rose-700 dark:bg-rose-400/40 dark:text-rose-200
+                                        @else 
+                                            bg-sky-500/30 text-sky-700 dark:bg-sky-400/40 dark:text-sky-200
+                                        @endif">
                                         {{ ucfirst($article->sentiment) }}
                                     </span>
                                 </div>
@@ -776,7 +787,7 @@
                                                 $event.target.closest('button').innerHTML = '<svg xmlns=\'http://www.w3.org/2000/svg\' class=\'h-4 w-4 mr-1\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'currentColor\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3\' /></svg>Copy Link';
                                             }, 1500);
                                         "
-                                        class="flex-1 text-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors text-sm font-medium flex items-center justify-center"
+                                        class="flex-1 text-center px-4 py-2 bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-300 rounded-md transition-all text-sm font-medium flex items-center justify-center backdrop-blur-sm border border-purple-500/20"
                                         type="button"
                                         aria-label="Copy link to {{ $article->title }}"
                                     >
@@ -786,7 +797,7 @@
                                         Copy Link
                                     </button>
                                     
-                                    <a href="{{ $article->getRedirectRoute() }}" target="_blank" rel="noopener" class="flex-1 text-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors text-sm font-medium flex items-center justify-center" aria-label="Read article: {{ $article->title }}">
+                                    <a href="{{ $article->getRedirectRoute() }}" target="_blank" rel="noopener" class="flex-1 text-center px-4 py-2 bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-300 rounded-md transition-all text-sm font-medium flex items-center justify-center backdrop-blur-sm border border-purple-500/20" aria-label="Read article: {{ $article->title }}">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-1" aria-hidden="true">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
                                         </svg>
