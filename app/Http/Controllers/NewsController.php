@@ -163,7 +163,47 @@ class NewsController extends Controller
         
         $news->increment('clicks');
         
+        if (!$this->isValidExternalUrl($news->url)) {
+            return redirect()->route('news.index');
+        }
+        
         return redirect()->away($news->url);
+    }
+    
+    /**
+     * Validate that a URL is a safe external URL
+     *
+     * @param string $url
+     * @return bool
+     */
+    private function isValidExternalUrl(string $url): bool
+    {
+        $parsed = parse_url($url);
+        
+        if (!isset($parsed['host']) || !filter_var($url, FILTER_VALIDATE_URL)) {
+            return false;
+        }
+        
+        $host = strtolower($parsed['host']);
+        
+        $invalidHosts = [
+            'localhost',
+            '127.0.0.1',
+            '0.0.0.0',
+            '::1',
+        ];
+        
+        foreach ($invalidHosts as $invalid) {
+            if (strpos($host, $invalid) === 0) {
+                return false;
+            }
+        }
+        
+        if (preg_match('/^(10\.|172\.(1[6-9]|2[0-9]|3[0-1])\.|192\.168\.)/', $host)) {
+            return false;
+        }
+        
+        return true;
     }
     
     /**
@@ -202,41 +242,37 @@ class NewsController extends Controller
         return Cache::remember(self::CACHE_PREFIX . 'last24h_sentiment', now()->addMinutes(self::CACHE_MINUTES), function () {
             $last24Hours = now()->subHours(24);
             
-            // Get news from the last 24 hours
-            $recentNews = News::where('published_at', '>=', $last24Hours)->get();
+            $sentimentCounts = News::where('published_at', '>=', $last24Hours)
+                ->select('sentiment')
+                ->get()
+                ->groupBy('sentiment')
+                ->map(fn ($items) => $items->count())
+                ->toArray();
             
-            // Initialize counters with weighted calculations
+            $politicalQuery = News::where('published_at', '>=', $last24Hours)->where(function ($query) {
+                foreach (self::POLITICAL_KEYWORDS as $keyword) {
+                    $query->orWhere('title', 'LIKE', "%{$keyword}%")
+                          ->orWhere('description', 'LIKE', "%{$keyword}%");
+                }
+            });
+            
+            $politicalSentimentCounts = $politicalQuery->get()
+                ->groupBy('sentiment')
+                ->map(fn ($items) => $items->count())
+                ->toArray();
+            
             $counts = [
                 'positive' => 0,
                 'negative' => 0,
                 'neutral' => 0,
             ];
             
-            foreach ($recentNews as $news) {
-                // Check if this is a political news
-                $isPolitical = false;
-                foreach (self::POLITICAL_KEYWORDS as $keyword) {
-                    if (stripos($news->title, $keyword) !== false || stripos($news->description, $keyword) !== false) {
-                        $isPolitical = true;
-                        break;
-                    }
-                }
+            foreach (['positive', 'negative', 'neutral'] as $sentiment) {
+                $totalCount = $sentimentCounts[$sentiment] ?? 0;
+                $politicalCount = $politicalSentimentCounts[$sentiment] ?? 0;
+                $nonPoliticalCount = $totalCount - $politicalCount;
                 
-                // Apply weight based on news type
-                $weight = $isPolitical ? 2 : 1;
-                
-                // Apply weighted count
-                switch ($news->sentiment) {
-                    case 'positive':
-                        $counts['positive'] += $weight;
-                        break;
-                    case 'negative':
-                        $counts['negative'] += $weight;
-                        break;
-                    case 'neutral':
-                        $counts['neutral'] += 1; // Always weight of 1 for neutral
-                        break;
-                }
+                $counts[$sentiment] = ($politicalCount * 2) + $nonPoliticalCount;
             }
             
             $total = array_sum($counts);

@@ -27,7 +27,7 @@ class BitcoinPriceService
             ],
             'timeout' => 10,
             'connect_timeout' => 5,
-            'verify' => false,
+            'verify' => true,
         ]);
     }
     
@@ -164,28 +164,24 @@ class BitcoinPriceService
         // Keep only data from the last 7 days
         BitcoinPrice::where('recorded_at', '<', now()->subDays(7))
             ->delete();
-  
+   
         // Reduce data granularity for 2-7 days ago
-        // (keep only 1 record per hour)
-        $startDate = now()->subDays(7);
-        $endDate = now()->subDays(2);
+        // (keep only 1 record per hour) using efficient bulk delete
+        $startDate = now()->subDays(7)->format('Y-m-d H:i:s');
+        $endDate = now()->subDays(2)->format('Y-m-d H:i:s');
 
-        $hourlyRecords = BitcoinPrice::whereBetween('recorded_at', [$startDate, $endDate])
-            ->orderBy('recorded_at')
-            ->get()
-            ->groupBy(static fn ($item) => $item->recorded_at->format('Y-m-d H:00:00'));
+        // Get IDs to keep (one per hour)
+        $idsToKeep = BitcoinPrice::whereBetween('recorded_at', [$startDate, $endDate])
+            ->selectRaw('MIN(id) as id')
+            ->groupByRaw("strftime('%Y-%m-%d %H', recorded_at)")
+            ->pluck('id')
+            ->toArray();
 
-        foreach ($hourlyRecords as $hour => $records) {
-            if ($records->count() > 1) {
-                // Keep only the middle record of the hour
-                $keepIndex = intdiv($records->count(), 2);
-                
-                foreach ($records as $index => $record) {
-                    if ($index !== $keepIndex) {
-                        $record->delete();
-                    }
-                }
-            }
+        if (!empty($idsToKeep)) {
+            // Delete all records in the date range except the ones to keep
+            BitcoinPrice::whereBetween('recorded_at', [$startDate, $endDate])
+                ->whereNotIn('id', $idsToKeep)
+                ->delete();
         }
     }
 } 

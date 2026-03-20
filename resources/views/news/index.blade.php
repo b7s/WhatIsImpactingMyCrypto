@@ -766,7 +766,7 @@
                                     {{ $article->title }}
                                 </h3>
                                 
-                                <p class="text-gray-600 dark:text-gray-400 line-clamp-3 mb-4">{!! $cleanDesc !!}</p>
+                                <p class="text-gray-600 dark:text-gray-400 line-clamp-3 mb-4">{{ $cleanDesc }}</p>
                                 
                                 <div class="mt-auto flex justify-between items-center">
                                     <div class="flex items-center gap-1">

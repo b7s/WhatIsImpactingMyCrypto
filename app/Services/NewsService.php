@@ -34,7 +34,7 @@ class NewsService
             ],
             'timeout' => 10,
             'connect_timeout' => 5,
-            'verify' => false,
+            'verify' => true,
         ]);
     }
 
@@ -142,7 +142,11 @@ class NewsService
             if (isset($parsedUrl['query'])) {
                 parse_str($parsedUrl['query'], $queryParams);
                 if (isset($queryParams['url'])) {
-                    return $queryParams['url'];
+                    $extractedUrl = $queryParams['url'];
+                    if ($this->isInternalUrl($extractedUrl)) {
+                        return '';
+                    }
+                    return $extractedUrl;
                 }
             }
             
@@ -154,7 +158,7 @@ class NewsService
                 
                 if ($response->getStatusCode() === 302 || $response->getStatusCode() === 301) {
                     $location = $response->getHeaderLine('Location');
-                    if (!empty($location)) {
+                    if (!empty($location) && !$this->isInternalUrl($location)) {
                         return $location;
                     }
                 }
@@ -181,27 +185,80 @@ class NewsService
         }
     }
     
+    /**
+     * Check if a URL points to an internal/dangerous host
+     *
+     * @param string $url
+     * @return bool
+     */
+    private function isInternalUrl(string $url): bool
+    {
+        if (empty($url)) {
+            return true;
+        }
+        
+        $parsed = parse_url($url);
+        
+        if (!isset($parsed['host'])) {
+            return true;
+        }
+        
+        $host = strtolower($parsed['host']);
+        
+        $invalidHosts = [
+            'localhost',
+            '127.0.0.1',
+            '0.0.0.0',
+            '::1',
+        ];
+        
+        foreach ($invalidHosts as $invalid) {
+            if (strpos($host, $invalid) === 0) {
+                return true;
+            }
+        }
+        
+        if (preg_match('/^(10\.|172\.(1[6-9]|2[0-9]|3[0-1])\.|192\.168\.)/', $host)) {
+            return true;
+        }
+        
+        if (preg_match('/^(localhost|metadata\.google\.internal|metadata)/', $host)) {
+            return true;
+        }
+        
+        return false;
+    }
+    
     private function extractUrlFromHtml(string $html, string $googleUrl): string
     {
         // Try to extract URL from a meta refresh tag or javascript redirect
         if (preg_match('/window\.location\s*=\s*[\'"]([^\'"]+)[\'"]/', $html, $matches)) {
-            return $matches[1];
+            $url = $matches[1];
+            if (!$this->isInternalUrl($url)) {
+                return $url;
+            }
         }
         
         if (preg_match('/<meta[^>]*?url=([^"\']*)/', $html, $matches)) {
-            return $matches[1];
+            $url = $matches[1];
+            if (!$this->isInternalUrl($url)) {
+                return $url;
+            }
         }
         
         // Try to find an article URL
         if (preg_match('/<a[^>]*?href=["\'](https?:\/\/[^"\']*?)["\'][^>]*?>(article|read|full|story)/i', $html, $matches)) {
-            if (strpos($matches[1], 'google') === false) {
+            if (strpos($matches[1], 'google') === false && !$this->isInternalUrl($matches[1])) {
                 return $matches[1];
             }
         }
         
         // Try to find a canonical link
         if (preg_match('/<link[^>]*?rel=["\'](canonical)["\'][^>]*?href=["\'](https?:\/\/[^"\']*?)["\']/', $html, $matches)) {
-            return $matches[2];
+            $url = $matches[2];
+            if (!$this->isInternalUrl($url)) {
+                return $url;
+            }
         }
         
         // Find any non-Google outbound link
@@ -209,7 +266,8 @@ class NewsService
             foreach ($matches[1] as $match) {
                 if (strpos($match, 'google') === false && 
                     strpos($match, 'gstatic') === false && 
-                    strpos($match, 'youtube') === false) {
+                    strpos($match, 'youtube') === false &&
+                    !$this->isInternalUrl($match)) {
                     return $match;
                 }
             }
